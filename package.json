@@ -1,0 +1,29 @@
+{
+  "name": "ntu-beyond-binary",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jasonmatthewsuhari/ntu-beyond-binary.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jasonmatthewsuhari/ntu-beyond-binary/issues"
+  },
+  "homepage": "https://github.com/jasonmatthewsuhari/ntu-beyond-binary#readme",
+  "dependencies": {
+    "@computer-use/nut-js": "^4.2.0",
+    "@nut-tree-fork/nut-js": "^4.2.6",
+    "@ui-tars/operator-nut-js": "^1.2.3",
+    "@ui-tars/sdk": "^1.2.3",
+    "jimp": "^0.22.12",
+    "uuid": "^13.0.0"
+  }
+}
