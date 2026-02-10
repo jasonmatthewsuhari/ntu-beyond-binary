@@ -1,9 +1,24 @@
+/* ── OpenDyslexic Font ─────────────────────────────────── */
+@import url('https://fonts.cdnfonts.com/css/opendyslexic');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.font-dyslexic body,
+.font-dyslexic * {
+  font-family: 'OpenDyslexic', sans-serif !important;
+}
+
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
 }
 
 @layer utilities {
@@ -13,7 +28,10 @@ body {
 }
 
 @layer base {
-  :root {
+
+  /* ── Light Theme (Neobrutalist Yellow) ───────────────── */
+  :root,
+  [data-theme="light"] {
     --background: 56 100% 50%;
     --foreground: 0 0% 0%;
     --card: 0 0% 98%;
@@ -28,43 +46,114 @@ body {
     --muted-foreground: 0 0% 35%;
     --accent: 56 100% 50%;
     --accent-foreground: 0 0% 0%;
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 12%;
     --input: 0 0% 98%;
     --ring: 0 0% 0%;
-    --chart-1: 56 100% 50%;
-    --chart-2: 0 0% 20%;
-    --chart-3: 56 100% 60%;
-    --chart-4: 0 0% 40%;
-    --chart-5: 56 100% 45%;
     --radius: 1rem;
+    --sidebar-bg: 0 0% 96%;
+    --success: 142 76% 36%;
   }
-  .dark {
-    --background: 56 100% 50%;
-    --foreground: 0 0% 0%;
-    --card: 0 0% 98%;
-    --card-foreground: 0 0% 0%;
-    --popover: 0 0% 98%;
-    --popover-foreground: 0 0% 0%;
-    --primary: 0 0% 0%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 93%;
-    --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 90%;
-    --muted-foreground: 0 0% 35%;
-    --accent: 56 100% 50%;
+
+  /* ── Dark Theme ──────────────────────────────────────── */
+  [data-theme="dark"] {
+    --background: 240 6% 10%;
+    --foreground: 0 0% 95%;
+    --card: 240 5% 15%;
+    --card-foreground: 0 0% 95%;
+    --popover: 240 5% 15%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 56 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 240 4% 20%;
+    --secondary-foreground: 0 0% 90%;
+    --muted: 240 4% 22%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 56 90% 45%;
     --accent-foreground: 0 0% 0%;
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 12%;
-    --input: 0 0% 98%;
-    --ring: 0 0% 0%;
-    --chart-1: 56 100% 50%;
-    --chart-2: 0 0% 20%;
-    --chart-3: 56 100% 60%;
-    --chart-4: 0 0% 40%;
-    --chart-5: 56 100% 45%;
+    --border: 0 0% 30%;
+    --input: 240 5% 18%;
+    --ring: 56 100% 50%;
+    --sidebar-bg: 240 5% 12%;
+    --success: 142 76% 46%;
+  }
+
+  /* ── High Contrast ───────────────────────────────────── */
+  [data-theme="high-contrast"] {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 60 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 60 100% 50%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 100%;
+    --input: 0 0% 8%;
+    --ring: 60 100% 50%;
+    --sidebar-bg: 0 0% 3%;
+    --success: 120 100% 50%;
+  }
+
+  /* ── Colorblind Safe (Blue/Orange) ───────────────────── */
+  [data-theme="colorblind"] {
+    --background: 210 30% 96%;
+    --foreground: 210 20% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 20% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 20% 10%;
+    --primary: 210 90% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 90% 55%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 210 15% 88%;
+    --muted-foreground: 210 10% 40%;
+    --accent: 30 90% 55%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 30 100% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 20% 30%;
+    --input: 210 20% 95%;
+    --ring: 210 90% 40%;
+    --sidebar-bg: 210 25% 93%;
+    --success: 210 80% 50%;
+  }
+
+  /* ── Calm (Soft Pastels) ─────────────────────────────── */
+  [data-theme="calm"] {
+    --background: 220 25% 94%;
+    --foreground: 220 15% 20%;
+    --card: 220 20% 98%;
+    --card-foreground: 220 15% 20%;
+    --popover: 220 20% 98%;
+    --popover-foreground: 220 15% 20%;
+    --primary: 220 40% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 200 20% 88%;
+    --secondary-foreground: 220 15% 20%;
+    --muted: 220 15% 90%;
+    --muted-foreground: 220 10% 45%;
+    --accent: 260 30% 65%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 350 50% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 15% 70%;
+    --input: 220 20% 96%;
+    --ring: 220 40% 55%;
+    --sidebar-bg: 220 20% 92%;
+    --success: 160 40% 50%;
   }
 }
 
@@ -72,7 +161,29 @@ body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-size: var(--user-font-size, 16px);
+    line-height: var(--user-line-height, 1.6);
+    letter-spacing: var(--user-letter-spacing, 0px);
+  }
+}
+
+/* ── Global focus styles for keyboard navigation ──────── */
+:focus-visible {
+  outline: 3px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* ── Cursor sizes ─────────────────────────────────────── */
+[data-cursor="large"] * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M4 4l20 8-8 4-4 8z' fill='black' stroke='white' stroke-width='2'/%3E%3C/svg%3E") 4 4, auto;
+}
+
+/* ── Smooth scrolling (respects reduced motion) ───────── */
+@media (prefers-reduced-motion: no-preference) {
+  :not(.reduce-motion) {
+    scroll-behavior: smooth;
   }
 }

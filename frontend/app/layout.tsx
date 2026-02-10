@@ -1,32 +1,26 @@
 import React from "react"
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { ToasterWrapper } from '@/components/toaster-wrapper'
+import { ClientLayout } from '@/components/client-layout'
 
 import './globals.css'
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '600', '700', '800', '900'],
   variable: '--font-inter'
 })
 
 export const metadata: Metadata = {
-  title: 'Fluent - Multimodal Input to Text',
-  description: 'Convert voice, drawings, and gestures into text with our accessible multimodal input tool',
-  generator: 'v0.app',
+  title: 'Fluent — Universal Accessibility Platform',
+  description: 'Make every computer usable by every human. Multimodal input platform supporting voice, drawing, sign language, eye gaze, and more.',
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        {children}
-        <ToasterWrapper />
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   )
