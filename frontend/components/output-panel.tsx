@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { useFluentContext } from '@/lib/fluent-context'
+import { executeOnDesktop } from '@/lib/use-electron'
 import { Button } from '@/components/ui/button'
 import {
     Volume2, VolumeX, Copy, Trash2, Undo2, Redo2,
@@ -20,6 +21,12 @@ export function OutputPanel() {
         try {
             await navigator.clipboard.writeText(output.text)
         } catch { }
+    }
+
+    const handleExecute = async () => {
+        if (!output.text) return
+        const result = await executeOnDesktop(output.text)
+        console.log('Desktop execution result:', result)
     }
 
     return (
@@ -97,7 +104,7 @@ export function OutputPanel() {
 
                         <Button
                             size="sm" variant="outline"
-                            onClick={() => speak()}
+                            onClick={handleExecute}
                             disabled={!output.text}
                             className="gap-1.5 font-bold text-xs border-2 border-border bg-primary text-primary-foreground shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] transition-all"
                             aria-label="Execute on desktop"

@@ -1,0 +1,6 @@
+<!-- Placeholder icon - replace with actual icon -->
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#FFEB3B" rx="80"/>
+  <rect x="40" y="40" width="432" height="432" fill="#000" stroke="#000" stroke-width="8" rx="40"/>
+  <text x="256" y="320" font-family="Arial, sans-serif" font-size="200" font-weight="900" fill="#FFEB3B" text-anchor="middle">F</text>
+</svg>
