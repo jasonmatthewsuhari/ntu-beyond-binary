@@ -292,10 +292,10 @@ cd frontend
 npm run electron
 ```
 
-##### Production Mode
+##### Production Mode - Simple Build
 
 ```bash
-# Build and package the application
+# Build and package the application (frontend only)
 cd frontend
 npm run build
 npm run electron-build
@@ -304,7 +304,30 @@ npm run electron-build
 # Windows: Fluent-Setup-1.0.0.exe
 # macOS: Fluent-1.0.0.dmg
 # Linux: Fluent-1.0.0.AppImage
+
+# Note: This requires Python to be installed on user's machine
 ```
+
+##### Production Mode - Standalone Build (Recommended)
+
+For a **completely standalone executable** that includes everything (no Python needed!):
+
+```bash
+# Build everything with bundled backend
+# Windows:
+build-all.bat
+
+# macOS/Linux:
+chmod +x build-all.sh
+./build-all.sh
+
+# Creates a complete installer with:
+# ✅ Python backend bundled inside
+# ✅ All dependencies included
+# ✅ Users just download and run!
+```
+
+See [BUILD_INSTRUCTIONS.md](BUILD_INSTRUCTIONS.md) for detailed build documentation.
 
 ### Verification
 
@@ -1339,6 +1362,7 @@ When possible, test your changes with people who have disabilities. Consider:
 
 - **[README.md](README.md)** - Main documentation (you are here)
 - **[QUICK_START.md](QUICK_START.md)** - 5-minute setup guide
+- **[BUILD_INSTRUCTIONS.md](BUILD_INSTRUCTIONS.md)** - How to build standalone executables
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute to the project
 - **[backend/README.md](backend/README.md)** - Backend API documentation
 - **[backend/env.example](backend/env.example)** - Environment variable template

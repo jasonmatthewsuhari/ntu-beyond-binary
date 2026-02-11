@@ -247,7 +247,7 @@ Now you can edit files and see changes immediately!
 
 ## Production Build
 
-To create a distributable app:
+### Simple Build (Requires Python on User's Machine)
 
 ```bash
 cd frontend
@@ -263,6 +263,28 @@ Executables will be in `frontend/dist/`:
 - Windows: `Fluent-Setup-1.0.0.exe`
 - macOS: `Fluent-1.0.0.dmg`
 - Linux: `Fluent-1.0.0.AppImage`
+
+### Standalone Build (Recommended - No Dependencies!)
+
+To create a **complete standalone executable** with Python bundled inside:
+
+```bash
+# From project root
+
+# Windows:
+build-all.bat
+
+# macOS/Linux:
+chmod +x build-all.sh
+./build-all.sh
+```
+
+This creates:
+- ✅ **Completely standalone** - no Python needed!
+- ✅ **All dependencies included** - TensorFlow, MediaPipe, etc.
+- ✅ **Just download and run** - users need nothing pre-installed
+
+See [BUILD_INSTRUCTIONS.md](BUILD_INSTRUCTIONS.md) for details.
 
 ## Getting Help
 

@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
+    "@mediapipe/tasks-vision": "^0.10.32",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
     "@radix-ui/react-aspect-ratio": "1.1.1",
@@ -96,7 +97,27 @@
       "out/**/*",
       "electron/**/*",
       "public/**/*",
-      "package.json"
+      "package.json",
+      "../backend/dist/fluent-backend${/*}"
+    ],
+    "extraResources": [
+      {
+        "from": "../backend/dist/",
+        "to": "backend",
+        "filter": ["fluent-backend*"]
+      },
+      {
+        "from": "../backend/env.example",
+        "to": "backend/env.example"
+      },
+      {
+        "from": "../agent.py",
+        "to": "backend/agent.py"
+      },
+      {
+        "from": "../desktop_agent.py",
+        "to": "backend/desktop_agent.py"
+      }
     ],
     "directories": {
       "buildResources": "public",
