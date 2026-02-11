@@ -596,6 +596,135 @@ npm run electron-build
 5. **Natural Language** - All inputs convert to queries like "Open calculator"
 6. **Execute** - Desktop agent performs the action
 
+### Using the Desktop Agent (CLI)
+
+The desktop agent can also be used standalone for vision-driven automation:
+
+#### Setup
+
+1. **Copy environment template:**
+   ```bash
+   cp env.example .env
+   ```
+
+2. **Configure API keys** in `.env`:
+   ```env
+   # Choose your AI provider
+   AI_PROVIDER=gemini  # or "openai"
+   
+   # If using Gemini (default):
+   GOOGLE_API_KEY=your_gemini_api_key
+   
+   # If using OpenAI:
+   OPENAI_API_KEY=your_openai_api_key
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements-agent.txt
+   # Or manually:
+   # pip install pyautogui pillow google-generativeai openai python-dotenv
+   ```
+
+#### Basic Usage
+
+```bash
+# Simple task
+python agent.py "Open Notepad and type Hello World"
+
+# With options
+python agent.py --max-steps 30 --save-screenshots "Search Google for cats"
+
+# Using OpenAI instead of Gemini
+# Set AI_PROVIDER=openai in .env, then:
+python agent.py "Open Calculator and compute 42 * 17"
+```
+
+#### Available Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--max-steps N` | Maximum automation steps | 50 |
+| `--delay N` | Seconds to wait after each action | 1.5 |
+| `--grid-spacing N` | Coordinate grid spacing (pixels) | 100 |
+| `--save-screenshots` | Save each screenshot for debugging | False |
+| `--model NAME` | Gemini model to use | gemini-2.5-flash |
+
+#### How It Works
+
+1. **Takes screenshot** with coordinate grid overlay
+2. **Sends to AI** (Gemini or OpenAI GPT-4 Vision)
+3. **AI analyzes** and decides next action
+4. **Executes action** (click, type, scroll, etc.)
+5. **Repeats** until task complete or max steps reached
+
+#### Example Tasks
+
+```bash
+# Web browsing
+python agent.py "Open Chrome and search for Python tutorials"
+
+# File management
+python agent.py "Create a new folder called Projects on the desktop"
+
+# System tasks
+python agent.py "Open Task Manager and find Chrome processes"
+
+# Complex workflows
+python agent.py --max-steps 50 "Open Excel, create a table with 5 rows and 3 columns"
+```
+
+#### Switching Between Gemini and OpenAI
+
+Edit `.env` to change AI provider:
+
+```env
+# Use Google Gemini (faster, free tier available)
+AI_PROVIDER=gemini
+GOOGLE_API_KEY=your_key
+
+# OR use OpenAI GPT-4 Vision (more accurate, costs money)
+AI_PROVIDER=openai
+OPENAI_API_KEY=your_key
+```
+
+**Comparison:**
+
+| Feature | Gemini | OpenAI |
+|---------|--------|--------|
+| **Speed** | ⚡ Faster | Slower |
+| **Cost** | Free tier available | $0.01-0.03 per request |
+| **Accuracy** | Good | Excellent |
+| **Vision Quality** | Very Good | Best |
+| **Rate Limits** | Generous | Moderate |
+
+#### Troubleshooting
+
+**"GOOGLE_API_KEY not found"**
+```bash
+# Make sure .env file exists and has your key
+cat .env  # Check file contents
+```
+
+**"Task incomplete after 50 steps"**
+```bash
+# Increase max steps for complex tasks
+python agent.py --max-steps 100 "your task"
+```
+
+**Agent clicking wrong coordinates**
+```bash
+# Adjust grid spacing for better precision
+python agent.py --grid-spacing 50 "your task"
+```
+
+**Want to see what it's doing?**
+```bash
+# Save screenshots of each step
+python agent.py --save-screenshots "your task"
+# Check screenshot_step_1.png, screenshot_step_2.png, etc.
+```
+
 ### Example Workflows
 
 **Voice:**
@@ -1580,6 +1709,7 @@ When possible, test your changes with people who have disabilities. Consider:
 - **[BUILD_INSTRUCTIONS.md](BUILD_INSTRUCTIONS.md)** - How to build standalone executables
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute
 - **[backend/README.md](backend/README.md)** - Backend API documentation
+- **Desktop Agent** - See "Using the Desktop Agent (CLI)" section above
 
 ### Setup Scripts
 

@@ -3,10 +3,14 @@ Desktop Agent — CLI entry point.
 Usage:
     python agent.py "Open Notepad and type Hello World"
     python agent.py --max-steps 30 --delay 2.0 --save-screenshots "Your task here"
+    
+Supports both Google Gemini and OpenAI GPT-4 Vision.
+Configure AI_PROVIDER in .env file (gemini or openai).
 """
 
 import argparse
 import sys
+import os
 
 from dotenv import load_dotenv
 
@@ -42,17 +46,26 @@ def main():
         help="Save each screenshot to disk for debugging",
     )
     parser.add_argument(
-        "--model", type=str, default="gemini-2.5-flash",
-        help="Gemini model to use (default: gemini-2.5-flash)",
+        "--model", type=str, default=None,
+        help="AI model to use (default: from env or gemini-2.0-flash-exp / gpt-4-vision-preview)",
     )
 
     args = parser.parse_args()
 
     # Import here so --help works without dependencies installed
     from desktop_agent import DesktopAgent
+    
+    # Determine model based on AI provider
+    model = args.model
+    if not model:
+        ai_provider = os.getenv("AI_PROVIDER", "gemini").lower()
+        if ai_provider == "openai":
+            model = os.getenv("OPENAI_MODEL", "gpt-4-vision-preview")
+        else:
+            model = os.getenv("GEMINI_MODEL", "gemini-2.0-flash-exp")
 
     agent = DesktopAgent(
-        model=args.model,
+        model=model,
         max_steps=args.max_steps,
         grid_spacing=args.grid_spacing,
         action_delay=args.delay,

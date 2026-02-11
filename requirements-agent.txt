@@ -1,0 +1,15 @@
+# Desktop Agent Dependencies
+# Install with: pip install -r requirements-agent.txt
+
+# Core dependencies
+pyautogui==0.9.54
+pillow==10.2.0
+python-dotenv==1.0.0
+
+# AI providers (install both or choose one)
+google-generativeai==0.3.2  # For Gemini
+openai==1.12.0               # For OpenAI GPT-4 Vision
+
+# Optional but recommended
+python-xlib==0.33  # For Linux
+pyobjc-framework-Quartz==10.1  # For macOS
