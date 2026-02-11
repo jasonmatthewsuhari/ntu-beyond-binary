@@ -28,7 +28,7 @@ export function SOSButton({ compact }: SOSButtonProps) {
         <div className="relative">
             <button
                 onClick={triggerSOS}
-                className={`flex items-center gap-2 w-full px-3 py-2.5 rounded-lg font-black text-sm transition-all ${triggered
+                className={`flex items-center ${compact ? 'justify-center p-2 rounded-full aspect-square' : 'gap-2 w-full px-3 py-2.5 rounded-lg'} font-black text-sm transition-all ${triggered
                         ? 'bg-destructive text-destructive-foreground animate-pulse'
                         : 'bg-destructive/90 text-destructive-foreground hover:bg-destructive shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px]'
                     }`}

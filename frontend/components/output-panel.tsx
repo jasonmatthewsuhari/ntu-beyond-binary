@@ -20,7 +20,10 @@ export function OutputPanel() {
         if (!output.text) return
         try {
             await navigator.clipboard.writeText(output.text)
-        } catch { }
+        } catch (err) {
+            // Clipboard permission denied - this is expected in some browsers/contexts
+            console.log('Clipboard access not available')
+        }
     }
 
     const handleExecute = async () => {

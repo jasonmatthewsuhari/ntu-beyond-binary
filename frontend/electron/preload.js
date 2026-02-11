@@ -15,6 +15,12 @@ contextBridge.exposeInMainWorld('electron', {
 
     // Window controls
     minimizeToTray: () => ipcRenderer.send('minimize-to-tray'),
+    minimizeWindow: () => ipcRenderer.send('minimize-window'),
+    maximizeWindow: () => ipcRenderer.send('maximize-window'),
+    closeWindow: () => ipcRenderer.send('close-window'),
+    toggleDock: () => ipcRenderer.invoke('toggle-dock'),
+    getDockState: () => ipcRenderer.invoke('get-dock-state'),
+    isMaximized: () => ipcRenderer.invoke('is-maximized'),
 
     // Listen for main process events
     onTriggerSOS: (callback) => {
@@ -28,6 +34,9 @@ contextBridge.exposeInMainWorld('electron', {
     },
     onSpeakOutput: (callback) => {
         ipcRenderer.on('speak-output', () => callback())
+    },
+    onDockStateChanged: (callback) => {
+        ipcRenderer.on('dock-state-changed', (event, data) => callback(data))
     },
 
     // Remove listeners

@@ -3,10 +3,11 @@
 import React, { useState, useCallback } from 'react'
 import { useFluentContext } from '@/lib/fluent-context'
 import { recordInput } from '@/lib/adaptive-engine'
+import { useWebSocket } from '@/lib/use-websocket'
 import { ModePageLayout } from '@/components/mode-page-layout'
 import { OnScreenKeyboard } from '@/components/on-screen-keyboard'
 import { Card } from '@/components/ui/card'
-import { Eye, Settings2 } from 'lucide-react'
+import { Eye, Settings2, Send } from 'lucide-react'
 
 export default function EyeGazePage() {
     const { appendOutput, settings } = useFluentContext()
@@ -14,22 +15,31 @@ export default function EyeGazePage() {
     const [dwellTime, setDwellTime] = useState(settings.dwellTime)
     const [layout, setLayout] = useState<'qwerty' | 'alphabetical'>('qwerty')
 
+    const { isConnected, executeQuery } = useWebSocket({
+        inputMethod: 'eye-gaze',
+        onExecutionResult: (result) => {
+            console.log('Eye gaze query executed:', result)
+        }
+    })
+
     const handleKey = useCallback((key: string) => {
         if (key === '\b') {
             setTypedText(prev => prev.slice(0, -1))
         } else if (key === '\n') {
-            appendOutput(typedText + ' ')
-            recordInput('eye-gaze', true, typedText.length * dwellTime, typedText)
-            setTypedText('')
+            if (typedText.trim()) {
+                appendOutput(typedText + ' ')
+                recordInput('eye-gaze', true, typedText.length * dwellTime, typedText)
+                executeQuery(typedText)
+                setTypedText('')
+            }
         } else {
             setTypedText(prev => prev + key)
         }
-    }, [appendOutput, typedText, dwellTime])
+    }, [appendOutput, typedText, dwellTime, executeQuery])
 
     return (
         <ModePageLayout
             title="Eye Gaze"
-            description="Look at keys to type. Dwell on a key to select it. Mocked with mouse hover."
             icon={<Eye className="h-6 w-6 text-white" />}
             color="bg-cyan-500"
             helpContent="Hover over a key and hold still. After the dwell time, the key will be selected. Adjust dwell time below. In production, this uses webcam-based eye tracking."

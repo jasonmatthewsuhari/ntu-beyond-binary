@@ -36,15 +36,6 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
 }
 
 
-// Validate ../../../app/input/communication-board/page.tsx
-{
-  type __IsExpected<Specific extends AppPageConfig<"/input/communication-board">> = Specific
-  const handler = {} as typeof import("../../../app/input/communication-board/page.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
 // Validate ../../../app/input/custom/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/input/custom">> = Specific
@@ -117,15 +108,6 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   type __Unused = __Check
 }
 
-// Validate ../../../app/input/switch/page.tsx
-{
-  type __IsExpected<Specific extends AppPageConfig<"/input/switch">> = Specific
-  const handler = {} as typeof import("../../../app/input/switch/page.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
 // Validate ../../../app/input/type/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/input/type">> = Specific
@@ -144,10 +126,28 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   type __Unused = __Check
 }
 
+// Validate ../../../app/onboarding/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/onboarding">> = Specific
+  const handler = {} as typeof import("../../../app/onboarding/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../../app/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/">> = Specific
   const handler = {} as typeof import("../../../app/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/profile-select/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/profile-select">> = Specific
+  const handler = {} as typeof import("../../../app/profile-select/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

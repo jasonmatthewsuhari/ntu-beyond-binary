@@ -1,18 +1,19 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useFluentContext } from '@/lib/fluent-context'
+import { getEnabledInputModes } from '@/lib/profile-utils'
 import { OutputPanel } from '@/components/output-panel'
 import { SOSButton } from '@/components/sos-button'
 import {
     Mic, Pencil, Hand, Keyboard, Accessibility, Eye, Move,
     Smile, Wind, ToggleLeft, LayoutGrid, Sparkles,
-    Settings, Home, PanelLeftClose, PanelLeft,
+    Settings, Home, PanelLeftClose, PanelLeft, LogOut
 } from 'lucide-react'
 
-const INPUT_MODES = [
+export const INPUT_MODES = [
     { id: 'voice', label: 'Voice', icon: Mic, href: '/input/voice', color: 'bg-blue-500' },
     { id: 'draw', label: 'Draw', icon: Pencil, href: '/input/draw', color: 'bg-orange-500' },
     { id: 'haptic', label: 'Haptic', icon: Hand, href: '/input/haptic', color: 'bg-purple-500' },
@@ -30,9 +31,37 @@ const INPUT_MODES = [
 export function AppShell({ children }: { children: React.ReactNode }) {
     const { sidebarOpen, setSidebarOpen } = useFluentContext()
     const pathname = usePathname()
+    const router = useRouter()
+    const [enabledModes, setEnabledModes] = useState<string[]>([])
+
+    // Load enabled modes on mount
+    useEffect(() => {
+        setEnabledModes(getEnabledInputModes())
+    }, [])
+
+    // Filter INPUT_MODES based on user's profile
+    const filteredModes = INPUT_MODES.filter(mode => enabledModes.includes(mode.id))
+
+    // Auto-collapse sidebar when window is small
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 600 && sidebarOpen) {
+                setSidebarOpen(false)
+            }
+        }
+
+        handleResize() // Check on mount
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [sidebarOpen, setSidebarOpen])
+
+    const handleSignOut = () => {
+        localStorage.removeItem('fluent-current-profile')
+        router.push('/profile-select')
+    }
 
     return (
-        <div className="flex h-screen overflow-hidden">
+        <div className="flex flex-1 overflow-hidden">
             {/* ── Sidebar ──────────────────────────────────── */}
             <aside
                 className={`flex flex-col border-r-4 border-border bg-[hsl(var(--sidebar-bg))] transition-all duration-200 flex-shrink-0 ${sidebarOpen ? 'w-56' : 'w-16'
@@ -41,37 +70,37 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 aria-label="Main navigation"
             >
                 {/* Toggle */}
-                <div className="flex items-center justify-between p-3 border-b-4 border-border">
+                <div className="flex items-center justify-between p-2 sm:p-3 border-b-4 border-border">
                     {sidebarOpen && (
-                        <Link href="/" className="font-black text-lg text-foreground tracking-tight">
+                        <Link href="/" className="font-black text-base sm:text-lg text-foreground tracking-tight">
                             Fluent
                         </Link>
                     )}
                     <button
                         onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="p-2 rounded-lg hover:bg-muted transition-colors"
+                        className="p-1.5 sm:p-2 rounded-lg hover:bg-muted transition-colors"
                         aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
                     >
-                        {sidebarOpen ? <PanelLeftClose className="h-5 w-5" /> : <PanelLeft className="h-5 w-5" />}
+                        {sidebarOpen ? <PanelLeftClose className="h-4 w-4 sm:h-5 sm:w-5" /> : <PanelLeft className="h-4 w-4 sm:h-5 sm:w-5" />}
                     </button>
                 </div>
 
                 {/* Home */}
                 <Link
                     href="/"
-                    className={`flex items-center gap-3 px-3 py-2.5 mx-2 mt-2 rounded-lg font-bold text-sm transition-all ${pathname === '/'
-                            ? 'bg-primary text-primary-foreground shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]'
-                            : 'hover:bg-muted text-foreground'
+                    className={`flex items-center ${sidebarOpen ? 'gap-2 sm:gap-3 px-2 sm:px-3 py-2 sm:py-2.5' : 'justify-center p-2.5'} mx-1.5 sm:mx-2 mt-1.5 sm:mt-2 ${sidebarOpen ? 'rounded-lg' : 'rounded-full aspect-square'} font-bold text-xs sm:text-sm transition-all ${pathname === '/'
+                        ? 'bg-primary text-primary-foreground shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]'
+                        : 'hover:bg-muted text-foreground'
                         }`}
                     aria-current={pathname === '/' ? 'page' : undefined}
                 >
-                    <Home className="h-5 w-5 flex-shrink-0" />
+                    <Home className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
                     {sidebarOpen && <span>Dashboard</span>}
                 </Link>
 
                 {/* Mode links */}
-                <div className="flex-1 overflow-y-auto px-2 py-2 space-y-0.5" role="list" aria-label="Input modes">
-                    {INPUT_MODES.map((mode) => {
+                <div className="flex-1 overflow-y-auto px-1.5 sm:px-2 py-1.5 sm:py-2 space-y-0.5 custom-scrollbar" role="list" aria-label="Input modes">
+                    {filteredModes.map((mode) => {
                         const Icon = mode.icon
                         const isActive = pathname.startsWith(mode.href)
                         return (
@@ -79,39 +108,49 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                                 key={mode.id}
                                 href={mode.href}
                                 role="listitem"
-                                className={`flex items-center gap-3 px-3 py-2 rounded-lg font-semibold text-sm transition-all ${isActive
-                                        ? 'bg-primary text-primary-foreground shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]'
-                                        : 'hover:bg-muted text-foreground'
+                                className={`flex items-center ${sidebarOpen ? 'gap-2 sm:gap-3 px-2 sm:px-3 py-1.5 sm:py-2' : 'justify-center p-2'} ${sidebarOpen ? 'rounded-lg' : 'rounded-full aspect-square'} font-semibold text-xs sm:text-sm transition-all ${isActive
+                                    ? 'bg-primary text-primary-foreground shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]'
+                                    : 'hover:bg-muted text-foreground'
                                     }`}
                                 aria-current={isActive ? 'page' : undefined}
                                 title={mode.label}
                             >
-                                <Icon className="h-4 w-4 flex-shrink-0" />
+                                <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
                                 {sidebarOpen && <span>{mode.label}</span>}
                             </Link>
                         )
                     })}
                 </div>
 
-                {/* Bottom: Settings + SOS */}
-                <div className="border-t-4 border-border p-2 space-y-1">
+                {/* Bottom: Settings, Sign Out, SOS */}
+                <div className="border-t-4 border-border p-1.5 sm:p-2 space-y-0.5 sm:space-y-1">
                     <Link
                         href="/settings"
-                        className={`flex items-center gap-3 px-3 py-2 rounded-lg font-semibold text-sm transition-all ${pathname === '/settings'
-                                ? 'bg-primary text-primary-foreground shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]'
-                                : 'hover:bg-muted text-foreground'
+                        className={`flex items-center ${sidebarOpen ? 'gap-2 sm:gap-3 px-2 sm:px-3 py-1.5 sm:py-2' : 'justify-center p-2'} ${sidebarOpen ? 'rounded-lg' : 'rounded-full aspect-square'} font-semibold text-xs sm:text-sm transition-all ${pathname === '/settings'
+                            ? 'bg-primary text-primary-foreground shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] sm:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]'
+                            : 'hover:bg-muted text-foreground'
                             }`}
                     >
-                        <Settings className="h-4 w-4 flex-shrink-0" />
+                        <Settings className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
                         {sidebarOpen && <span>Settings</span>}
                     </Link>
+
+                    <button
+                        onClick={handleSignOut}
+                        className={`w-full flex items-center ${sidebarOpen ? 'gap-2 sm:gap-3 px-2 sm:px-3 py-1.5 sm:py-2' : 'justify-center p-2'} ${sidebarOpen ? 'rounded-lg' : 'rounded-full aspect-square'} font-semibold text-xs sm:text-sm transition-all hover:bg-muted text-foreground`}
+                        aria-label="Sign out"
+                    >
+                        <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+                        {sidebarOpen && <span>Sign Out</span>}
+                    </button>
+
                     <SOSButton compact={!sidebarOpen} />
                 </div>
             </aside>
 
             {/* ── Main Content + Output ────────────────────── */}
-            <div className="flex-1 flex flex-col min-w-0">
-                <main className="flex-1 overflow-y-auto p-6">{children}</main>
+            <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+                <main className="flex-1 overflow-y-auto p-2 sm:p-6 custom-scrollbar">{children}</main>
                 <OutputPanel />
             </div>
         </div>

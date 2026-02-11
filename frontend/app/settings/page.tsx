@@ -291,6 +291,15 @@ export default function SettingsPage() {
                             className="gap-1.5 font-bold border-2 border-border shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                             <RotateCcw className="h-4 w-4" /> Reset Usage Data
                         </Button>
+                        <Button variant="outline" onClick={() => {
+                            localStorage.removeItem('fluent-onboarding-complete')
+                            localStorage.removeItem('fluent-primary-input')
+                            localStorage.removeItem('fluent-calibration')
+                            window.location.href = '/onboarding'
+                        }}
+                            className="gap-1.5 font-bold border-2 border-border shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] text-orange-600">
+                            <RotateCcw className="h-4 w-4" /> Reset Onboarding
+                        </Button>
                     </div>
                 </Card>
             )}

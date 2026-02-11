@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { useFluentContext } from '@/lib/fluent-context'
 import { recordInput } from '@/lib/adaptive-engine'
+import { useWebSocket } from '@/lib/use-websocket'
 import { ModePageLayout } from '@/components/mode-page-layout'
 import { WebcamPreview } from '@/components/webcam-preview'
 import { Card } from '@/components/ui/card'
@@ -33,39 +34,41 @@ export default function FacialPage() {
     const [lastExpression, setLastExpression] = useState<string | null>(null)
     const [detectionLog, setDetectionLog] = useState<string[]>([])
 
-    const toggleDetection = () => {
-        if (isDetecting) {
-            setIsDetecting(false)
-        } else {
-            setIsDetecting(true)
-            // Mock: random expression detection every few seconds
-            const interval = setInterval(() => {
-                const expr = expressions[Math.floor(Math.random() * expressions.length)]
-                setLastExpression(expr.expression)
-                appendOutput(expr.action + ' ')
-                setDetectionLog(prev => [`${expr.emoji} ${expr.expression} → "${expr.action}"`, ...prev.slice(0, 9)])
-                recordInput('facial', true, 2000, expr.action)
-            }, 3500)
-            setTimeout(() => clearInterval(interval), 60000)
+    const { isConnected, executeQuery } = useWebSocket({
+        inputMethod: 'facial',
+        onExecutionResult: (result) => {
+            console.log('Facial expression query executed:', result)
         }
+    })
+
+    const toggleDetection = () => {
+        setIsDetecting(!isDetecting)
+        if (!isDetecting) {
+            // Clear logs when starting
+            setDetectionLog([])
+            setLastExpression(null)
+        }
+        // TODO: Implement actual facial expression detection using MediaPipe
+        // Would process webcam frames and detect facial landmarks
     }
 
     const updateMapping = (index: number, newAction: string) => {
         setExpressions(prev => prev.map((e, i) => i === index ? { ...e, action: newAction } : e))
     }
 
-    // Direct trigger for demo
+    // Manual trigger for testing expressions
     const triggerExpression = (expr: ExpressionMapping) => {
         setLastExpression(expr.expression)
         appendOutput(expr.action + ' ')
         setDetectionLog(prev => [`${expr.emoji} ${expr.expression} → "${expr.action}"`, ...prev.slice(0, 9)])
         recordInput('facial', true, 500, expr.action)
+        executeQuery(expr.action) // Execute via desktop agent
+        if (navigator.vibrate) navigator.vibrate(50)
     }
 
     return (
         <ModePageLayout
             title="Facial Expression"
-            description="Use facial expressions to input commands. Smile, frown, blink, and more — all customizable."
             icon={<Smile className="h-6 w-6 text-white" />}
             color="bg-rose-500"
             helpContent="Start detection and make facial expressions. Each expression triggers a mapped action. You can also click expressions directly below to trigger them manually."

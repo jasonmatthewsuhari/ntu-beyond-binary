@@ -1,169 +1,330 @@
 'use client'
 
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useFluentContext } from '@/lib/fluent-context'
 import { recordInput } from '@/lib/adaptive-engine'
+import { useWebSocket } from '@/lib/use-websocket'
 import { ModePageLayout } from '@/components/mode-page-layout'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Hand, Trash2, ChevronDown, ChevronUp } from 'lucide-react'
+import { Hand, Plus, Settings2, Wifi, WifiOff } from 'lucide-react'
 
-const MORSE_MAP: Record<string, string> = {
-    '.-': 'A', '-...': 'B', '-.-.': 'C', '-..': 'D', '.': 'E',
-    '..-.': 'F', '--.': 'G', '....': 'H', '..': 'I', '.---': 'J',
-    '-.-': 'K', '.-..': 'L', '--': 'M', '-.': 'N', '---': 'O',
-    '.--.': 'P', '--.-': 'Q', '.-.': 'R', '...': 'S', '-': 'T',
-    '..-': 'U', '...-': 'V', '.--': 'W', '-..-': 'X', '-.--': 'Y',
-    '--..': 'Z', '.----': '1', '..---': '2', '...--': '3', '....-': '4',
-    '.....': '5', '-....': '6', '--...': '7', '---..': '8', '----.': '9',
-    '-----': '0',
+interface TapTiming {
+  duration: number
+  timestamp: number
+}
+
+const DEFAULT_PATTERNS: Record<string, string> = {
+  'S-S': 'Yes',
+  'L-L': 'No',
+  'S-S-S': 'Help',
+  'L-S': 'Next',
+  'S-L': 'Back',
+  'S-S-L': 'Enter',
+  'L-L-S': 'Delete',
+  'S-S-S-S': 'Emergency',
+  'L-L-L': 'Call',
+  'S-L-S-L': 'Police',
 }
 
 export default function HapticPage() {
-    const { appendOutput, settings } = useFluentContext()
-    const { morseThresholds } = settings
-    const [currentMorse, setCurrentMorse] = useState('')
-    const [morseHistory, setMorseHistory] = useState('')
-    const [isPressing, setIsPressing] = useState(false)
-    const [showReference, setShowReference] = useState(false)
-    const [feedback, setFeedback] = useState<'dot' | 'dash' | null>(null)
-    const pressStart = useRef(0)
-    const letterTimer = useRef<NodeJS.Timeout | null>(null)
-    const wordTimer = useRef<NodeJS.Timeout | null>(null)
+  const { appendOutput } = useFluentContext()
+  const [patterns, setPatterns] = useState(DEFAULT_PATTERNS)
+  const [currentPattern, setCurrentPattern] = useState<string[]>([])
+  const [recognizedText, setRecognizedText] = useState('')
+  const [tapStartTime, setTapStartTime] = useState<number | null>(null)
+  const [shortThreshold, setShortThreshold] = useState(200) // ms
+  const [patternTimeout, setPatternTimeout] = useState(2000) // ms
+  const [lastTapTime, setLastTapTime] = useState(0)
+  const [showCustomDialog, setShowCustomDialog] = useState(false)
+  const [newPattern, setNewPattern] = useState('')
+  const [newMeaning, setNewMeaning] = useState('')
+  const [combinedWords, setCombinedWords] = useState<string[]>([])
+  const [longPauseTimeout, setLongPauseTimeout] = useState<NodeJS.Timeout | null>(null)
+  
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-    const decodeMorse = useCallback((morse: string) => {
-        const char = MORSE_MAP[morse] || '?'
-        appendOutput(char)
-        setMorseHistory(prev => `${prev} ${morse}`)
-        setCurrentMorse('')
-        recordInput('haptic', char !== '?', Date.now() - pressStart.current, char)
-    }, [appendOutput])
-
-    const handlePressStart = () => {
-        setIsPressing(true)
-        pressStart.current = Date.now()
-        if (letterTimer.current) clearTimeout(letterTimer.current)
-        if (wordTimer.current) clearTimeout(wordTimer.current)
+  const { isConnected, executeQuery } = useWebSocket({
+    inputMethod: 'haptic',
+    onExecutionResult: (result) => {
+      console.log('Haptic query executed:', result)
     }
+  })
 
-    const handlePressEnd = () => {
-        setIsPressing(false)
-        const duration = Date.now() - pressStart.current
-        const signal = duration >= morseThresholds.dash ? '-' : '.'
-        setCurrentMorse(prev => prev + signal)
-        setFeedback(signal === '.' ? 'dot' : 'dash')
-        setTimeout(() => setFeedback(null), 300)
-
-        // Vibration feedback
-        if (navigator.vibrate) navigator.vibrate(signal === '.' ? 50 : 150)
-
-        letterTimer.current = setTimeout(() => {
-            setCurrentMorse(prev => { if (prev) decodeMorse(prev); return '' })
-        }, morseThresholds.letterGap)
-
-        wordTimer.current = setTimeout(() => {
-            appendOutput(' ')
-        }, morseThresholds.wordGap)
+  // Reset pattern after timeout
+  useEffect(() => {
+    if (currentPattern.length > 0) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      
+      timeoutRef.current = setTimeout(() => {
+        recognizeAndExecute(currentPattern)
+        setCurrentPattern([])
+      }, patternTimeout)
     }
-
-    const clear = () => {
-        setCurrentMorse('')
-        setMorseHistory('')
-        if (letterTimer.current) clearTimeout(letterTimer.current)
-        if (wordTimer.current) clearTimeout(wordTimer.current)
+    
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
+  }, [currentPattern, patternTimeout])
 
-    return (
-        <ModePageLayout
-            title="Haptic / Morse"
-            description="Tap for dot, hold for dash. Communicate using Morse code with customizable timing."
-            icon={<Hand className="h-6 w-6 text-white" />}
-            color="bg-purple-500"
-            helpContent="Quick tap = dot (·), long press = dash (—). After a pause, the letter is decoded. A longer pause adds a space between words. Customize timing in Settings."
+  const recognizeAndExecute = (pattern: string[]) => {
+    const patternStr = pattern.join('-')
+    const meaning = patterns[patternStr]
+    
+    if (meaning) {
+      setRecognizedText(meaning)
+      
+      // Add to combined words
+      setCombinedWords(prev => [...prev, meaning])
+      
+      // Start long pause detection (5+ seconds to finalize)
+      if (longPauseTimeout) clearTimeout(longPauseTimeout)
+      const timeout = setTimeout(() => {
+        // After 5 seconds, combine all words
+        if (combinedWords.length > 0 || meaning) {
+          const allWords = [...combinedWords, meaning]
+          const combined = allWords.join(' ')
+          appendOutput(combined + ' ')
+          recordInput('haptic', true, 500, combined)
+          executeQuery(combined) // Execute via desktop agent
+          setCombinedWords([])
+        }
+      }, 5000)
+      setLongPauseTimeout(timeout)
+    } else {
+      setRecognizedText(`Unknown pattern: ${patternStr}`)
+      recordInput('haptic', false, 500)
+    }
+  }
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.repeat) return // Ignore key repeats
+    if (e.code !== 'Space' && e.code !== 'Enter') return
+    
+    e.preventDefault()
+    const now = Date.now()
+    setTapStartTime(now)
+    setLastTapTime(now)
+  }
+
+  const handleKeyUp = (e: KeyboardEvent) => {
+    if (e.code !== 'Space' && e.code !== 'Enter') return
+    
+    e.preventDefault()
+    if (!tapStartTime) return
+    
+    const duration = Date.now() - tapStartTime
+    const tapType = duration < shortThreshold ? 'S' : 'L'
+    
+    setCurrentPattern(prev => [...prev, tapType])
+    setTapStartTime(null)
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keyup', handleKeyUp)
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('keyup', handleKeyUp)
+    }
+  }, [tapStartTime, shortThreshold])
+
+  const addCustomPattern = () => {
+    if (newPattern && newMeaning) {
+      setPatterns(prev => ({ ...prev, [newPattern]: newMeaning }))
+      setNewPattern('')
+      setNewMeaning('')
+      setShowCustomDialog(false)
+    }
+  }
+
+  const currentPatternStr = currentPattern.join('-') || '(none)'
+
+  return (
+    <ModePageLayout
+      title="Haptic Input"
+      icon={<Hand className="h-6 w-6 text-white" />}
+      color="bg-purple-500"
+      helpContent="Press and hold Space or Enter to create tap patterns. Short tap = S (< 200ms), Long tap = L (> 200ms). Combine taps to create patterns like S-S for Yes or L-L for No."
         >
-            <div className="grid gap-6 md:grid-cols-[1fr_280px]">
-                <Card className="p-6 border-4 border-border shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center gap-6">
-                    {/* Current buffer */}
-                    <div className="w-full p-4 bg-input border-4 border-border rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
-                        <p className="text-3xl font-mono font-black tracking-[0.5em]">
-                            {currentMorse || <span className="text-muted-foreground">Ready...</span>}
-                        </p>
-                    </div>
-
-                    {/* Feedback indicator */}
-                    <div className="flex gap-4 items-center">
-                        <div className={`w-6 h-6 rounded-full border-2 border-border transition-all ${feedback === 'dot' ? 'bg-primary scale-125' : 'bg-muted'}`} />
-                        <div className={`w-12 h-6 rounded-full border-2 border-border transition-all ${feedback === 'dash' ? 'bg-primary scale-110' : 'bg-muted'}`} />
-                    </div>
-
-                    {/* Main tap button */}
-                    <button
-                        onMouseDown={handlePressStart}
-                        onMouseUp={handlePressEnd}
-                        onMouseLeave={() => isPressing && handlePressEnd()}
-                        onTouchStart={(e) => { e.preventDefault(); handlePressStart() }}
-                        onTouchEnd={(e) => { e.preventDefault(); handlePressEnd() }}
-                        className={`h-36 w-36 rounded-full border-4 border-border flex items-center justify-center transition-all select-none
-              shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]
-              ${isPressing
-                                ? 'bg-accent scale-95 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] translate-x-[4px] translate-y-[4px]'
-                                : 'bg-purple-500 hover:bg-purple-600'
-                            }`}
-                        aria-label="Press for morse code input"
-                    >
-                        <Hand className="h-14 w-14 text-white" />
-                    </button>
-
-                    <p className="text-sm font-bold text-muted-foreground">
-                        {isPressing ? 'Release for signal...' : 'Tap or hold'}
-                    </p>
-
-                    {/* History */}
-                    {morseHistory && (
-                        <div className="w-full p-3 bg-input border-2 border-border rounded-xl">
-                            <p className="text-xs font-bold text-muted-foreground mb-1">Morse history:</p>
-                            <p className="font-mono text-sm font-medium break-all">{morseHistory}</p>
-                        </div>
-                    )}
-
-                    <Button variant="outline" onClick={clear} className="gap-2 font-bold border-2 border-border shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px]">
-                        <Trash2 className="h-4 w-4" /> Clear
-                    </Button>
-                </Card>
-
-                {/* Reference */}
+            <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
                 <div className="space-y-4">
-                    <Card className="p-4 border-4 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        <button
-                            onClick={() => setShowReference(!showReference)}
-                            className="flex items-center justify-between w-full"
-                        >
-                            <h3 className="font-black text-sm">Morse Reference</h3>
-                            {showReference ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                        </button>
-                        {showReference && (
-                            <div className="mt-3 grid grid-cols-2 gap-1 text-xs font-mono">
-                                {Object.entries(MORSE_MAP).map(([code, char]) => (
-                                    <div key={code} className="flex justify-between px-2 py-0.5 rounded hover:bg-muted">
-                                        <span className="font-bold">{char}</span>
-                                        <span className="text-muted-foreground">{code}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </Card>
-                    <Card className="p-4 border-4 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        <h3 className="font-black text-sm mb-2">Timing</h3>
-                        <div className="space-y-1 text-xs font-medium text-muted-foreground">
-                            <p>Dot: &lt; {morseThresholds.dash}ms</p>
-                            <p>Dash: ≥ {morseThresholds.dash}ms</p>
-                            <p>Letter gap: {morseThresholds.letterGap}ms</p>
-                            <p>Word gap: {morseThresholds.wordGap}ms</p>
-                            <p className="text-primary font-bold mt-2">Customize in Settings →</p>
-                        </div>
-                    </Card>
+                    {/* Current Pattern Display */}
+                    <Card className="p-6 border-4 border-border shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] min-h-[300px] flex flex-col justify-center">
+            <div className="text-center space-y-4">
+              <div>
+                <p className="text-xs font-bold text-muted-foreground mb-2">Current Pattern</p>
+                <div className="flex justify-center gap-2 min-h-[60px] items-center">
+                  {currentPattern.length === 0 ? (
+                    <span className="text-muted-foreground text-sm">Press Space or Enter to start</span>
+                  ) : (
+                    currentPattern.map((tap, i) => (
+                      <div
+                        key={i}
+                        className={`px-4 py-2 rounded-lg border-2 border-border font-black text-lg ${
+                          tap === 'S' ? 'bg-blue-500 text-white' : 'bg-orange-500 text-white'
+                        }`}
+                      >
+                        {tap}
+                      </div>
+                    ))
+                  )}
                 </div>
+                <p className="text-sm font-bold mt-2">{currentPatternStr}</p>
+              </div>
+
+              {recognizedText && (
+                <div className="p-4 bg-primary/10 border-2 border-primary rounded-xl">
+                  <p className="text-xs font-bold text-muted-foreground mb-1">Recognized:</p>
+                  <p className="font-black text-lg">{recognizedText}</p>
+                  
+                  {combinedWords.length > 0 && (
+                    <div className="mt-3 pt-3 border-t-2 border-primary/20">
+                      <p className="text-xs font-bold text-muted-foreground mb-1">
+                        Building phrase (pause 5s to send):
+                      </p>
+                      <p className="font-bold text-sm text-primary">
+                        {[...combinedWords, recognizedText].join(' ')}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-        </ModePageLayout>
-    )
+          </Card>
+
+                    {/* Pattern Library */}
+                    <Card className="p-6 border-4 border-border shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-black text-sm">Pattern Library</h3>
+              <Button
+                size="sm"
+                onClick={() => setShowCustomDialog(true)}
+                className="gap-2 font-bold border-2 border-border shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+              >
+                <Plus className="h-3 w-3" /> Add Pattern
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              {Object.entries(patterns).map(([pattern, meaning]) => (
+                <div
+                  key={pattern}
+                  className="p-3 bg-muted border-2 border-border rounded-lg text-center"
+                >
+                  <p className="text-xs font-black text-muted-foreground">{pattern}</p>
+                  <p className="font-bold text-sm">{meaning}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Custom Pattern Dialog */}
+          {showCustomDialog && (
+            <Card className="p-6 border-4 border-border shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] bg-background">
+              <h3 className="font-black text-sm mb-4">Add Custom Pattern</h3>
+              <div className="space-y-3">
+                <div>
+                  <label className="text-xs font-bold mb-1 block">Pattern (e.g., S-L-S)</label>
+                  <input
+                    type="text"
+                    value={newPattern}
+                    onChange={(e) => setNewPattern(e.target.value)}
+                    className="w-full px-3 py-2 border-2 border-border rounded-lg font-bold bg-input"
+                    placeholder="S-L-S"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold mb-1 block">Meaning</label>
+                  <input
+                    type="text"
+                    value={newMeaning}
+                    onChange={(e) => setNewMeaning(e.target.value)}
+                    className="w-full px-3 py-2 border-2 border-border rounded-lg font-bold bg-input"
+                    placeholder="Save"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={addCustomPattern}
+                    className="flex-1 font-bold border-2 border-border shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                  >
+                    Add
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowCustomDialog(false)}
+                    className="flex-1 font-bold border-2 border-border shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          )}
+        </div>
+
+        {/* Settings Sidebar */}
+        <div className="space-y-4">
+          <Card className="p-4 border-4 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <h3 className="font-black text-sm mb-3 flex items-center gap-2">
+              <Settings2 className="h-4 w-4" /> Settings
+            </h3>
+
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs font-bold mb-1 block">
+                  Short Tap Threshold: {shortThreshold}ms
+                </label>
+                <input
+                  type="range"
+                  min={50}
+                  max={500}
+                  step={10}
+                  value={shortThreshold}
+                  onChange={(e) => setShortThreshold(Number(e.target.value))}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground font-bold mt-1">
+                  <span>Faster</span>
+                  <span>Slower</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold mb-1 block">
+                  Pattern Timeout: {patternTimeout}ms
+                </label>
+                <input
+                  type="range"
+                  min={1000}
+                  max={5000}
+                  step={100}
+                  value={patternTimeout}
+                  onChange={(e) => setPatternTimeout(Number(e.target.value))}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground font-bold mt-1">
+                  <span>1s</span>
+                  <span>5s</span>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-4 border-4 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <h3 className="font-black text-sm mb-2">Instructions</h3>
+            <ul className="space-y-2 text-xs font-medium text-muted-foreground">
+              <li>• Press and hold Space or Enter</li>
+              <li>• Short tap (S) = quick press</li>
+              <li>• Long tap (L) = hold longer</li>
+              <li>• Pattern completes after pause</li>
+              <li>• Adjust thresholds for comfort</li>
+            </ul>
+          </Card>
+        </div>
+      </div>
+    </ModePageLayout>
+  )
 }

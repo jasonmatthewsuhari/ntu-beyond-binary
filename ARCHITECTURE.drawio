@@ -1,0 +1,414 @@
+<mxfile host="app.diagrams.net" modified="2026-02-11T12:00:00.000Z" agent="5.0" version="24.0.0" etag="abc123" type="device">
+  <diagram name="Fluent Architecture" id="fluent-arch">
+    <mxGraphModel dx="1434" dy="844" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="Fluent Accessibility Platform - System Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="800" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- Frontend Container -->
+        <mxCell id="frontend-container" value="FRONTEND - Electron + Next.js" style="swimlane;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;fillColor=#FFEB3B;strokeColor=#000000;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="480" height="480" as="geometry" />
+        </mxCell>
+        
+        <!-- User Interface -->
+        <mxCell id="ui" value="User Interface&#xa;(React + Tailwind)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF59D;strokeColor=#000000;strokeWidth=2;fontSize=12;fontStyle=1" vertex="1" parent="frontend-container">
+          <mxGeometry x="140" y="40" width="200" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- Input Methods -->
+        <mxCell id="voice" value="Voice" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2196F3;strokeColor=#000000;strokeWidth=2;fontSize=10;fontColor=#FFFFFF" vertex="1" parent="frontend-container">
+          <mxGeometry x="20" y="120" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="type" value="Type" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4CAF50;strokeColor=#000000;strokeWidth=2;fontSize=10;fontColor=#FFFFFF" vertex="1" parent="frontend-container">
+          <mxGeometry x="110" y="120" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="draw" value="Draw" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9800;strokeColor=#000000;strokeWidth=2;fontSize=10;fontColor=#FFFFFF" vertex="1" parent="frontend-container">
+          <mxGeometry x="200" y="120" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="haptic" value="Haptic" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9C27B0;strokeColor=#000000;strokeWidth=2;fontSize=10;fontColor=#FFFFFF" vertex="1" parent="frontend-container">
+          <mxGeometry x="290" y="120" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="sign" value="Sign" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E91E63;strokeColor=#000000;strokeWidth=2;fontSize=10;fontColor=#FFFFFF" vertex="1" parent="frontend-container">
+          <mxGeometry x="380" y="120" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="eyegaze" value="Eye Gaze" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00BCD4;strokeColor=#000000;strokeWidth=2;fontSize=10;fontColor=#FFFFFF" vertex="1" parent="frontend-container">
+          <mxGeometry x="20" y="170" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="head" value="Head" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFC107;strokeColor=#000000;strokeWidth=2;fontSize=10;fontColor=#000000" vertex="1" parent="frontend-container">
+          <mxGeometry x="110" y="170" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="facial" value="Facial" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F44336;strokeColor=#000000;strokeWidth=2;fontSize=10;fontColor=#FFFFFF" vertex="1" parent="frontend-container">
+          <mxGeometry x="200" y="170" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="sippuff" value="Sip/Puff" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#009688;strokeColor=#000000;strokeWidth=2;fontSize=10;fontColor=#FFFFFF" vertex="1" parent="frontend-container">
+          <mxGeometry x="290" y="170" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="custom" value="Custom" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#673AB7;strokeColor=#000000;strokeWidth=2;fontSize=10;fontColor=#FFFFFF" vertex="1" parent="frontend-container">
+          <mxGeometry x="380" y="170" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- WebSocket Client -->
+        <mxCell id="ws-client" value="WebSocket Client&#xa;(use-websocket.ts)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#000000;strokeWidth=2;fontSize=11;fontStyle=1" vertex="1" parent="frontend-container">
+          <mxGeometry x="140" y="240" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Output Panel -->
+        <mxCell id="output" value="Output Panel" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1F5FE;strokeColor=#000000;strokeWidth=2;fontSize=11;fontStyle=1" vertex="1" parent="frontend-container">
+          <mxGeometry x="140" y="320" width="200" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- Electron IPC -->
+        <mxCell id="ipc" value="Electron IPC&#xa;(main.js)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#000000;strokeWidth=2;fontSize=11;fontStyle=1" vertex="1" parent="frontend-container">
+          <mxGeometry x="140" y="390" width="200" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- Backend Container -->
+        <mxCell id="backend-container" value="BACKEND - FastAPI Server" style="swimlane;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;fillColor=#00BCD4;strokeColor=#000000;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="560" y="80" width="520" height="480" as="geometry" />
+        </mxCell>
+        
+        <!-- WebSocket Server -->
+        <mxCell id="ws-server" value="WebSocket Server&#xa;ws://localhost:8000" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#B2EBF2;strokeColor=#000000;strokeWidth=2;fontSize=11;fontStyle=1" vertex="1" parent="backend-container">
+          <mxGeometry x="160" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Input Processors -->
+        <mxCell id="processors-label" value="Input Processors" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1" vertex="1" parent="backend-container">
+          <mxGeometry x="190" y="110" width="140" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="voice-proc" value="Voice&#xa;Processor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2196F3;strokeColor=#000000;strokeWidth=2;fontSize=9;fontColor=#FFFFFF" vertex="1" parent="backend-container">
+          <mxGeometry x="20" y="140" width="70" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="draw-proc" value="Draw&#xa;Processor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FF9800;strokeColor=#000000;strokeWidth=2;fontSize=9;fontColor=#FFFFFF" vertex="1" parent="backend-container">
+          <mxGeometry x="100" y="140" width="70" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="haptic-proc" value="Haptic&#xa;Processor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9C27B0;strokeColor=#000000;strokeWidth=2;fontSize=9;fontColor=#FFFFFF" vertex="1" parent="backend-container">
+          <mxGeometry x="180" y="140" width="70" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="sign-proc" value="Sign&#xa;Processor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E91E63;strokeColor=#000000;strokeWidth=2;fontSize=9;fontColor=#FFFFFF" vertex="1" parent="backend-container">
+          <mxGeometry x="260" y="140" width="70" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="eye-proc" value="Eye Gaze&#xa;Processor" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00BCD4;strokeColor=#000000;strokeWidth=2;fontSize=9;fontColor=#FFFFFF" vertex="1" parent="backend-container">
+          <mxGeometry x="340" y="140" width="70" height="50" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="other-proc" value="Head, Facial,&#xa;Sip/Puff&#xa;Processors" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#607D8B;strokeColor=#000000;strokeWidth=2;fontSize=9;fontColor=#FFFFFF" vertex="1" parent="backend-container">
+          <mxGeometry x="430" y="140" width="70" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- Desktop Agent Interface -->
+        <mxCell id="agent-interface" value="Desktop Agent Interface&#xa;(agent_interface.py)&#xa;&#xa;• Command Queue&#xa;• Sequential Execution&#xa;• Context Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C5E1A5;strokeColor=#000000;strokeWidth=2;fontSize=10;fontStyle=1;align=center" vertex="1" parent="backend-container">
+          <mxGeometry x="140" y="220" width="240" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Storage -->
+        <mxCell id="storage-label" value="Storage Layer" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1" vertex="1" parent="backend-container">
+          <mxGeometry x="210" y="340" width="100" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="profiles" value="Profile Manager&#xa;(JSON Files)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#000000;strokeWidth=2;fontSize=10" vertex="1" parent="backend-container">
+          <mxGeometry x="40" y="370" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="calibrations" value="Calibration Manager&#xa;(JSON Files)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#000000;strokeWidth=2;fontSize=10" vertex="1" parent="backend-container">
+          <mxGeometry x="200" y="370" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="gestures" value="Gesture Manager&#xa;(Pickle Files)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#000000;strokeWidth=2;fontSize=10" vertex="1" parent="backend-container">
+          <mxGeometry x="360" y="370" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Desktop Agent Container -->
+        <mxCell id="agent-container" value="DESKTOP AGENT - agent.py" style="swimlane;whiteSpace=wrap;html=1;fontSize=14;fontStyle=1;fillColor=#4CAF50;strokeColor=#000000;strokeWidth=3;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="80" width="400" height="480" as="geometry" />
+        </mxCell>
+        
+        <!-- Vision Agent -->
+        <mxCell id="agent" value="Vision-Driven Agent&#xa;&#xa;• Screenshot Capture&#xa;• Query Processing&#xa;• Command Execution&#xa;• Result Handling" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#A5D6A7;strokeColor=#000000;strokeWidth=2;fontSize=11;fontStyle=1;align=center" vertex="1" parent="agent-container">
+          <mxGeometry x="80" y="50" width="240" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Gemini API -->
+        <mxCell id="gemini" value="Google Gemini 2.5 Flash&#xa;&#xa;Natural Language → &#xa;Automation Commands" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#81C784;strokeColor=#000000;strokeWidth=2;fontSize=11;fontStyle=1;align=center" vertex="1" parent="agent-container">
+          <mxGeometry x="80" y="180" width="240" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- OS Automation -->
+        <mxCell id="automation-label" value="OS Automation" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1" vertex="1" parent="agent-container">
+          <mxGeometry x="150" y="280" width="100" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pyautogui" value="PyAutoGUI&#xa;Mouse &amp; Keyboard" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#000000;strokeWidth=2;fontSize=10" vertex="1" parent="agent-container">
+          <mxGeometry x="50" y="310" width="110" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="screenshot" value="Screenshot&#xa;Capture" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#000000;strokeWidth=2;fontSize=10" vertex="1" parent="agent-container">
+          <mxGeometry x="180" y="310" width="90" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="appcontrol" value="Application&#xa;Control" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#000000;strokeWidth=2;fontSize=10" vertex="1" parent="agent-container">
+          <mxGeometry x="290" y="310" width="90" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Operating System -->
+        <mxCell id="os" value="Operating System&#xa;(Windows / macOS / Linux)&#xa;&#xa;Desktop Applications" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#000000;strokeWidth=2;fontSize=11;fontStyle=1;align=center" vertex="1" parent="agent-container">
+          <mxGeometry x="80" y="390" width="240" height="70" as="geometry" />
+        </mxCell>
+        
+        <!-- Connections from UI to inputs -->
+        <mxCell id="ui-voice" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="ui" target="voice">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ui-type" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="ui" target="type">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ui-draw" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="ui" target="draw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Connections from inputs to WebSocket Client -->
+        <mxCell id="voice-ws" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="voice" target="ws-client">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="type-ws" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="type" target="ws-client">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="draw-ws" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="draw" target="ws-client">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="haptic-ws" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="haptic" target="ws-client">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="sign-ws" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="sign" target="ws-client">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- WebSocket Client to Output -->
+        <mxCell id="ws-output" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="ws-client" target="output">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Output to IPC -->
+        <mxCell id="output-ipc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="output" target="ipc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- WebSocket Connection -->
+        <mxCell id="ws-connection" value="WebSocket&#xa;ws://localhost:8000" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#00BCD4;dashed=1;fontStyle=1" edge="1" parent="1" source="ws-client" target="ws-server">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- IPC to Agent Interface -->
+        <mxCell id="ipc-agent" value="HTTP POST&#xa;/api/execute" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#4CAF50;dashed=1;fontStyle=1" edge="1" parent="1" source="ipc" target="agent-interface">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- WebSocket Server to Processors -->
+        <mxCell id="ws-vproc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="ws-server" target="voice-proc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ws-dproc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="ws-server" target="draw-proc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ws-hproc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="ws-server" target="haptic-proc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ws-sproc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="ws-server" target="sign-proc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="ws-eproc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="ws-server" target="eye-proc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Processors to Agent Interface -->
+        <mxCell id="vproc-agent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="voice-proc" target="agent-interface">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="dproc-agent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="draw-proc" target="agent-interface">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="hproc-agent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="haptic-proc" target="agent-interface">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="sproc-agent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="sign-proc" target="agent-interface">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="eproc-agent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="eye-proc" target="agent-interface">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Processors to Storage (dashed) -->
+        <mxCell id="vproc-cal" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;dashed=1;strokeColor=#999999" edge="1" parent="1" source="voice-proc" target="calibrations">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="dproc-ges" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;dashed=1;strokeColor=#999999" edge="1" parent="1" source="draw-proc" target="gestures">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="hproc-ges" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;dashed=1;strokeColor=#999999" edge="1" parent="1" source="haptic-proc" target="gestures">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="eproc-cal" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;dashed=1;strokeColor=#999999" edge="1" parent="1" source="eye-proc" target="calibrations">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Agent Interface to Agent -->
+        <mxCell id="agentint-agent" value="Python Subprocess" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#8BC34A;dashed=1;fontStyle=1" edge="1" parent="1" source="agent-interface" target="agent">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Agent to Gemini -->
+        <mxCell id="agent-gemini" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="agent" target="gemini">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Gemini to Automation -->
+        <mxCell id="gemini-pyautogui" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="gemini" target="pyautogui">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="gemini-screenshot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="gemini" target="screenshot">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="gemini-appcontrol" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="gemini" target="appcontrol">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Automation to OS -->
+        <mxCell id="pyautogui-os" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="pyautogui" target="os">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="screenshot-os" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="screenshot" target="os">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="appcontrol-os" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" edge="1" parent="1" source="appcontrol" target="os">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Legend -->
+        <mxCell id="legend" value="LEGEND" style="swimlane;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#F5F5F5;strokeColor=#000000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="600" width="300" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend-solid" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000" edge="1" parent="legend">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="20" y="40" as="sourcePoint" />
+            <mxPoint x="80" y="40" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend-solid-label" value="Data Flow" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11" vertex="1" parent="legend">
+          <mxGeometry x="90" y="30" width="100" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend-dashed" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#00BCD4;dashed=1" edge="1" parent="legend">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="20" y="70" as="sourcePoint" />
+            <mxPoint x="80" y="70" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend-dashed-label" value="WebSocket Connection" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11" vertex="1" parent="legend">
+          <mxGeometry x="90" y="60" width="200" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend-http" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#4CAF50;dashed=1" edge="1" parent="legend">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="20" y="100" as="sourcePoint" />
+            <mxPoint x="80" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend-http-label" value="HTTP Connection" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11" vertex="1" parent="legend">
+          <mxGeometry x="90" y="90" width="200" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend-subprocess" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#8BC34A;dashed=1" edge="1" parent="legend">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="20" y="130" as="sourcePoint" />
+            <mxPoint x="80" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend-subprocess-label" value="Python Subprocess" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11" vertex="1" parent="legend">
+          <mxGeometry x="90" y="120" width="200" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend-storage" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#999999;dashed=1" edge="1" parent="legend">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="20" y="160" as="sourcePoint" />
+            <mxPoint x="80" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend-storage-label" value="Storage Access" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11" vertex="1" parent="legend">
+          <mxGeometry x="90" y="150" width="200" height="20" as="geometry" />
+        </mxCell>
+        
+        <!-- Tech Stack -->
+        <mxCell id="techstack" value="TECHNOLOGY STACK" style="swimlane;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#E3F2FD;strokeColor=#000000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="380" y="600" width="700" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="tech-frontend" value="FRONTEND&#xa;• Electron 33.2.1&#xa;• Next.js 15.1.6&#xa;• React 19&#xa;• TypeScript&#xa;• Tailwind CSS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEB3B;strokeColor=#000000;strokeWidth=2;fontSize=10;align=left;verticalAlign=top" vertex="1" parent="techstack">
+          <mxGeometry x="20" y="40" width="200" height="140" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="tech-backend" value="BACKEND&#xa;• FastAPI 0.115&#xa;• Python 3.11+&#xa;• WebSockets&#xa;• MediaPipe&#xa;• scikit-learn&#xa;• NumPy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#00BCD4;strokeColor=#000000;strokeWidth=2;fontSize=10;align=left;verticalAlign=top" vertex="1" parent="techstack">
+          <mxGeometry x="250" y="40" width="200" height="140" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="tech-agent" value="AGENT&#xa;• Google Gemini 2.5&#xa;• PyAutoGUI&#xa;• PIL (Screenshots)&#xa;• Python subprocess" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4CAF50;strokeColor=#000000;strokeWidth=2;fontSize=10;align=left;verticalAlign=top" vertex="1" parent="techstack">
+          <mxGeometry x="480" y="40" width="200" height="140" as="geometry" />
+        </mxCell>
+        
+        <!-- Key Features -->
+        <mxCell id="features" value="KEY FEATURES" style="swimlane;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#FFF3E0;strokeColor=#000000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="600" width="400" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="features-text" value="✓ 10 Diverse Input Methods&#xa;✓ Client-Side Privacy&#xa;✓ Real-Time WebSocket Communication&#xa;✓ Vision-Driven Desktop Automation&#xa;✓ Neobrutalist Accessibility UI&#xa;✓ Custom Gesture Training&#xa;✓ Adaptive Learning Engine&#xa;✓ Cross-Platform Support&#xa;✓ Offline-Capable (except AI)&#xa;✓ SOS Emergency Button" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=0" vertex="1" parent="features">
+          <mxGeometry x="20" y="40" width="360" height="140" as="geometry" />
+        </mxCell>
+        
+        <!-- Footer -->
+        <mxCell id="footer" value="Fluent Accessibility Platform v1.0.0 | Last Updated: February 11, 2026" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="560" y="830" width="480" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

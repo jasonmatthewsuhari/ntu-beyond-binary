@@ -3,11 +3,12 @@
 import React, { useState } from 'react'
 import { useFluentContext } from '@/lib/fluent-context'
 import { recordInput } from '@/lib/adaptive-engine'
+import { useWebSocket } from '@/lib/use-websocket'
 import { ModePageLayout } from '@/components/mode-page-layout'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Keyboard, Wand2, Sparkles } from 'lucide-react'
+import { Keyboard, Wand2, Sparkles, Send } from 'lucide-react'
 
 const PREDICTIONS = ['the', 'to', 'and', 'is', 'in', 'that', 'it', 'for']
 
@@ -16,6 +17,13 @@ export default function TypePage() {
     const [localText, setLocalText] = useState('')
     const [isRefining, setIsRefining] = useState(false)
     const [predictions, setPredictions] = useState(PREDICTIONS)
+
+    const { isConnected, executeQuery } = useWebSocket({
+        inputMethod: 'type',
+        onExecutionResult: (result) => {
+            console.log('Query executed:', result)
+        }
+    })
 
     const refineText = () => {
         if (!localText.trim()) return
@@ -40,7 +48,10 @@ export default function TypePage() {
 
     const sendToOutput = () => {
         if (!localText.trim()) return
-        appendOutput(localText + ' ')
+        const textToExecute = localText.trim()
+        appendOutput(textToExecute + ' ')
+        recordInput('type', true, textToExecute.length * 50, textToExecute)
+        executeQuery(textToExecute)
         setLocalText('')
     }
 
@@ -51,7 +62,6 @@ export default function TypePage() {
     return (
         <ModePageLayout
             title="Type"
-            description="Type directly. Use shorthand or abbreviations — Fluent will refine your text."
             icon={<Keyboard className="h-6 w-6 text-white" />}
             color="bg-green-500"
             helpContent="Type naturally using abbreviations like 'u' for 'you', 'pls' for 'please'. Click 'Refine' to clean up your text into proper English."
@@ -75,7 +85,7 @@ export default function TypePage() {
                     value={localText}
                     onChange={(e) => setLocalText(e.target.value)}
                     placeholder="Start typing... use shorthand like 'hw r u? i nd hlp'"
-                    className="min-h-[200px] border-4 border-border bg-input text-base font-medium shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl p-4 resize-none"
+                    className="min-h-[250px] border-4 border-border bg-input text-base font-medium shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-xl p-4 resize-none"
                     aria-label="Text input area"
                 />
 
@@ -91,11 +101,11 @@ export default function TypePage() {
                     </Button>
                     <Button
                         onClick={sendToOutput}
-                        disabled={!localText.trim()}
+                        disabled={!localText.trim() || !isConnected}
                         variant="outline"
                         className="flex-1 gap-2 font-bold border-2 border-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                     >
-                        <Sparkles className="h-4 w-4" /> Send to Output
+                        <Send className="h-4 w-4" /> Execute Command
                     </Button>
                 </div>
             </Card>

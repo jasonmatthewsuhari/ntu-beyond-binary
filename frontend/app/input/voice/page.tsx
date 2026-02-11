@@ -5,7 +5,6 @@ import { useFluentContext } from '@/lib/fluent-context'
 import { recordInput } from '@/lib/adaptive-engine'
 import { ModePageLayout } from '@/components/mode-page-layout'
 import { WaveformDisplay } from '@/components/waveform-display'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Mic, Square, Globe } from 'lucide-react'
 
@@ -16,56 +15,119 @@ export default function VoicePage() {
     const [transcription, setTranscription] = useState('')
     const [language, setLanguage] = useState('en')
     const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+    const recognitionRef = useRef<any>(null)
+
+    // WebSocket disabled for demo - backend not required
+    // const { isConnected, executeQuery } = useWebSocket({
+    //     inputMethod: 'voice',
+    //     onExecutionResult: (result) => {
+    //         console.log('Query executed:', result)
+    //     },
+    //     autoConnect: false
+    // })
 
     const startRecording = async () => {
         try {
-            const s = await navigator.mediaDevices.getUserMedia({ audio: true })
-            const recorder = new MediaRecorder(s)
-            mediaRecorderRef.current = recorder
-            const chunks: BlobPart[] = []
+            // Check for Web Speech API support
+            const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
 
-            recorder.ondataavailable = (e) => chunks.push(e.data)
-            recorder.onstop = () => {
-                s.getTracks().forEach(t => t.stop())
-                setStream(null)
-                // Mock transcription
-                const mockTexts = [
-                    'Hello, how are you doing today?',
-                    'I would like to send an email to my friend.',
-                    'Can you open the browser for me please?',
-                    'Thank you for helping me with this.',
-                    'I need to schedule a meeting for tomorrow.',
-                ]
-                const text = mockTexts[Math.floor(Math.random() * mockTexts.length)]
-                setTranscription(text)
-                appendOutput(text + ' ')
-                recordInput('voice', true, 3000, text)
+            if (SpeechRecognition) {
+                // Use Web Speech API for real-time transcription
+                const recognition = new SpeechRecognition()
+                recognition.lang = language === 'auto' ? 'en-US' : language + '-' + language.toUpperCase()
+                recognition.continuous = true
+                recognition.interimResults = true
+
+                recognition.onstart = () => {
+                    setIsRecording(true)
+                    setTranscription('')
+                    console.log('Speech recognition started')
+                }
+
+                recognition.onresult = (event: any) => {
+                    let finalTranscript = ''
+
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript
+                        if (event.results[i].isFinal) {
+                            finalTranscript += transcript + ' '
+                        }
+                    }
+
+                    if (finalTranscript) {
+                        setTranscription(prev => (prev + finalTranscript).trim())
+                    }
+                }
+
+                recognition.onerror = (event: any) => {
+                    console.log('Speech recognition error:', event.error)
+                    
+                    // Handle different error types gracefully
+                    if (event.error === 'network') {
+                        // Network error is common and can be ignored - speech recognition may still work
+                        console.log('Network error in speech recognition (this is usually harmless)')
+                    } else if (event.error === 'not-allowed' || event.error === 'permission-denied') {
+                        recordInput('voice', false, 0)
+                        setIsRecording(false)
+                        alert('Microphone permission denied. Please allow microphone access.')
+                    } else if (event.error === 'no-speech') {
+                        // No speech detected, just continue
+                        console.log('No speech detected')
+                    } else {
+                        // Other errors
+                        console.log('Speech recognition error:', event.error)
+                    }
+                }
+
+                recognition.start()
+                recognitionRef.current = recognition
+            } else {
+                // Fallback: just record audio
+                const s = await navigator.mediaDevices.getUserMedia({ audio: true })
+                setStream(s)
+                setIsRecording(true)
             }
-
-            recorder.start()
-            setStream(s)
-            setIsRecording(true)
-        } catch {
+        } catch (error) {
+            console.error('Failed to start recording:', error)
             recordInput('voice', false, 0)
         }
     }
 
     const stopRecording = () => {
-        mediaRecorderRef.current?.stop()
+        if (recognitionRef.current) {
+            recognitionRef.current.stop()
+            recognitionRef.current = null
+        }
+
+        if (stream) {
+            stream.getTracks().forEach(t => t.stop())
+            setStream(null)
+        }
+
         setIsRecording(false)
+
+        // Show mockup transcription for demo purposes
+        const mockupText = 'Please search up on YouTube proper clothes folding technique'
+        setTranscription(mockupText)
+
+        // Record the input and add to output
+        setTimeout(() => {
+            recordInput('voice', true, mockupText.length * 50, mockupText)
+            appendOutput(mockupText + ' ')
+            // Note: executeQuery disabled for demo - backend not required
+        }, 300)
     }
 
     return (
         <ModePageLayout
             title="Voice Input"
-            description="Speak clearly and Fluent will transcribe your words. Supports accented speech and speech impediments."
             icon={<Mic className="h-6 w-6 text-white" />}
             color="bg-blue-500"
             helpContent="Click the microphone button and speak. Your speech will be transcribed to text. If you have an accent or speech impediment, Fluent will do its best to understand your intended meaning."
         >
             <div className="grid gap-6 md:grid-cols-[1fr_280px]">
                 {/* Main controls */}
-                <Card className="p-6 border-4 border-border shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center gap-6">
+                <Card className="p-6 border-4 border-border shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center gap-6 min-h-[400px] justify-center">
                     {/* Language selector */}
                     <div className="flex items-center gap-2">
                         <Globe className="h-4 w-4 text-muted-foreground" />

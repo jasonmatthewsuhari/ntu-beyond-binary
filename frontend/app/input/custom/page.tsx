@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { useFluentContext } from '@/lib/fluent-context'
 import { recordInput } from '@/lib/adaptive-engine'
+import { useWebSocket } from '@/lib/use-websocket'
 import { ModePageLayout } from '@/components/mode-page-layout'
 import { WebcamPreview } from '@/components/webcam-preview'
 import { Card } from '@/components/ui/card'
@@ -28,6 +29,13 @@ export default function CustomPage() {
     const [newOutput, setNewOutput] = useState('')
     const [showAddForm, setShowAddForm] = useState(false)
 
+    const { isConnected, executeQuery } = useWebSocket({
+        inputMethod: 'haptic',
+        onExecutionResult: (result) => {
+            console.log('Custom input query executed:', result)
+        }
+    })
+
     const addCustomInput = () => {
         if (!newName.trim() || !newOutput.trim()) return
         setCustomInputs(prev => [...prev, {
@@ -50,13 +58,13 @@ export default function CustomPage() {
         appendOutput(input.output + ' ')
         setCustomInputs(prev => prev.map(i => i.id === input.id ? { ...i, triggerCount: i.triggerCount + 1 } : i))
         recordInput('custom', true, 500, input.output)
+        executeQuery(input.output) // Execute via desktop agent
         if (navigator.vibrate) navigator.vibrate(50)
     }
 
     return (
         <ModePageLayout
             title="Custom Input"
-            description="Create your own input methods. Record any gesture, motion, or signal → map it to text."
             icon={<Sparkles className="h-6 w-6 text-white" />}
             color="bg-violet-500"
             helpContent="Record a unique gesture via webcam and assign it a text output. Any repeatable motion can become an input method."

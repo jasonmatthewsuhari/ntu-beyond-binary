@@ -3,10 +3,11 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useFluentContext } from '@/lib/fluent-context'
 import { recordInput } from '@/lib/adaptive-engine'
+import { useWebSocket } from '@/lib/use-websocket'
 import { ModePageLayout } from '@/components/mode-page-layout'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Wind, Settings2 } from 'lucide-react'
+import { Wind, Settings2, Send } from 'lucide-react'
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 const COMMON_WORDS = ['THE', 'AND', 'FOR', 'ARE', 'BUT', 'NOT', 'YOU', 'ALL', 'CAN', 'HER', 'WAS', 'ONE']
@@ -21,6 +22,13 @@ export default function SipPuffPage() {
     const [audioLevel, setAudioLevel] = useState(0)
     const streamRef = useRef<MediaStream | null>(null)
     const analyserRef = useRef<AnalyserNode | null>(null)
+
+    const { isConnected, executeQuery } = useWebSocket({
+        inputMethod: 'sip-puff',
+        onExecutionResult: (result) => {
+            console.log('Sip/puff query executed:', result)
+        }
+    })
 
     const items = mode === 'letters' ? [...ALPHABET, ' ', '⌫', '↵'] : [...COMMON_WORDS, '⌫', '↵']
 
@@ -73,13 +81,16 @@ export default function SipPuffPage() {
         if (item === '⌫') {
             setTypedText(prev => prev.slice(0, -1))
         } else if (item === '↵') {
-            appendOutput(typedText + ' ')
-            recordInput('sip-puff', true, typedText.length * scanSpeed, typedText)
-            setTypedText('')
+            if (typedText.trim()) {
+                appendOutput(typedText + ' ')
+                recordInput('sip-puff', true, typedText.length * scanSpeed, typedText)
+                executeQuery(typedText) // Execute via desktop agent
+                setTypedText('')
+            }
         } else {
             setTypedText(prev => prev + (mode === 'words' ? item + ' ' : item))
         }
-    }, [items, scanIndex, typedText, mode, scanSpeed, appendOutput])
+    }, [items, scanIndex, typedText, mode, scanSpeed, appendOutput, executeQuery])
 
     // Keyboard/click selection
     useEffect(() => {
@@ -97,7 +108,6 @@ export default function SipPuffPage() {
     return (
         <ModePageLayout
             title="Sip & Puff"
-            description="Breath-based input. Blow or sip to select as items scan automatically."
             icon={<Wind className="h-6 w-6 text-white" />}
             color="bg-teal-500"
             helpContent="Press Start to begin scanning. Items highlight one at a time. Press Space/Enter (or blow into microphone) to select the highlighted item."

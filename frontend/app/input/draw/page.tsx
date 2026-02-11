@@ -3,10 +3,11 @@
 import React, { useRef, useState } from 'react'
 import { useFluentContext } from '@/lib/fluent-context'
 import { recordInput } from '@/lib/adaptive-engine'
+import { useWebSocket } from '@/lib/use-websocket'
 import { ModePageLayout } from '@/components/mode-page-layout'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Pencil, Trash2, Eraser, Check } from 'lucide-react'
+import { Pencil, Trash2, Eraser, Check, Send } from 'lucide-react'
 
 export default function DrawPage() {
     const { appendOutput } = useFluentContext()
@@ -15,6 +16,13 @@ export default function DrawPage() {
     const [strokeWidth, setStrokeWidth] = useState(4)
     const [strokeColor, setStrokeColor] = useState('#000000')
     const [recognized, setRecognized] = useState('')
+
+    const { isConnected, executeQuery } = useWebSocket({
+        inputMethod: 'draw',
+        onExecutionResult: (result) => {
+            console.log('Draw query executed:', result)
+        }
+    })
 
     const getPos = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
         const canvas = canvasRef.current
@@ -58,21 +66,23 @@ export default function DrawPage() {
     }
 
     const recognize = () => {
-        const mockResults = [
-            'Hello', 'Help', 'Water', 'Thank you', 'Yes', 'No',
-            'Medicine', 'Pain', 'Doctor', 'Family',
-        ]
-        const text = mockResults[Math.floor(Math.random() * mockResults.length)]
-        setRecognized(text)
-        appendOutput(text + ' ')
-        recordInput('draw', true, 2000, text)
-        clearCanvas()
+        // TODO: Implement actual gesture recognition using backend
+        // For now, user can manually type what they drew
+        const userInput = prompt('What did you draw? (This will be sent to the desktop agent)')
+        
+        if (userInput && userInput.trim()) {
+            const text = userInput.trim()
+            setRecognized(text)
+            appendOutput(text + ' ')
+            recordInput('draw', true, 2000, text)
+            executeQuery(text) // Execute via desktop agent
+            clearCanvas()
+        }
     }
 
     return (
         <ModePageLayout
             title="Draw / Write"
-            description="Draw letters, symbols, or words. Supports mouse, touch, and pen input."
             icon={<Pencil className="h-6 w-6 text-white" />}
             color="bg-orange-500"
             helpContent="Use your finger, mouse, or stylus to write letters or draw shapes. Click 'Recognize' to convert your drawing to text."

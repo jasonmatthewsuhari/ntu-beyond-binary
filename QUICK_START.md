@@ -6,7 +6,7 @@ Get Fluent up and running in **5 minutes**!
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/ntu-beyond-binary.git
+git clone https://github.com/jasonmatthewsuhari/ntu-beyond-binary.git
 cd ntu-beyond-binary
 
 # 2. Run setup (installs all dependencies and configures environment)
@@ -47,7 +47,7 @@ Install these first:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ntu-beyond-binary.git
+git clone https://github.com/jasonmatthewsuhari/ntu-beyond-binary.git
 cd ntu-beyond-binary
 
 # Run the setup script
@@ -296,7 +296,7 @@ Still stuck? Here's how to get help:
    - Electron: Check `frontend/out/dev/logs/next-development.log`
 
 2. **Search existing issues:**
-   - Visit: https://github.com/yourusername/ntu-beyond-binary/issues
+   - Visit: https://github.com/jasonmatthewsuhari/ntu-beyond-binary/issues
    - Search for your error message
 
 3. **Create a new issue:**

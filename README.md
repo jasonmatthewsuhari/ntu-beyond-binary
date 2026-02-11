@@ -1,10 +1,35 @@
 # Fluent - Universal Accessibility Input System
 
-A privacy-first, Electron-based accessibility application that translates various input methods (voice, gestures, eye gaze, etc.) into natural language queries executed via an AI-powered desktop agent.
+![Project Screenshot](readme_images/sitting_bottom_corner.jpg)
+
+A privacy-first, Electron-based accessibility application that translates various input methods (voice, gestures, eye gaze, etc.) into natural language queries executed via an AI-powered desktop agent. It's cool to be accessible!
 
 ## Overview
 
-Fluent enables people with disabilities to interact with their computers using their most comfortable input method. All inputs are converted to natural language and executed through an intelligent desktop agent.
+### The Problem
+
+Traditional computer interfaces assume everyone can use a mouse and keyboard. For millions of people with disabilities—whether from motor impairments, visual challenges, speech differences, or temporary injuries—this creates an insurmountable barrier to digital independence. Existing assistive technologies are often:
+
+- **Fragmented**: Separate tools for each disability type
+- **Expensive**: Enterprise solutions cost thousands of dollars
+- **Privacy-invasive**: Cloud-based processing of sensitive health/usage data
+- **One-size-fits-all**: Limited customization for individual needs
+- **Difficult to learn**: Steep learning curves with poor onboarding
+
+**The result?** People who need technology the most struggle to use it independently.
+
+### The Solution
+
+Fluent is a **universal accessibility platform** that empowers users to control their computer naturally, regardless of ability. It provides:
+
+- **10 diverse input methods** in a single application
+- **Privacy-first design** with all processing on your device
+- **Intelligent automation** via vision-driven desktop agent
+- **Beautiful, accessible UI** built with disability-first principles
+- **Guided onboarding** that adapts to each user's unique needs
+- **Free and open-source** for everyone
+
+All inputs—whether voice, gestures, eye movements, or breath—are converted to natural language and executed through an AI-powered desktop agent that understands context and intent.
 
 ### Supported Input Methods
 
@@ -17,6 +42,188 @@ Fluent enables people with disabilities to interact with their computers using t
 7. **Head Motion** - Nod, shake, tilt detection with quantity support
 8. **Facial Expression** - Smile, frown, blink, wink detection
 9. **Sip/Puff** - Breath-based input with scanning
+10. **Custom Input** - Create your own unique input methods
+
+---
+
+## 🌟 Accessibility at the Core
+
+Fluent isn't just accessible—it's **built for accessibility first**. Every design decision prioritizes the needs of people with disabilities.
+
+### Intelligent Onboarding Experience
+
+The onboarding flow is **adaptive and empowering**, not patronizing:
+
+1. **Profile Creation**
+   - Choose your name and avatar
+   - Select from colorful, personality-driven profile themes
+   - No medical questionnaires or invasive questions
+
+2. **Input Method Discovery**
+   - Visual grid of all 10 input methods with clear icons
+   - Select **only the methods that work for you**
+   - No forced defaults—your choice, your way
+   - Instant preview of each method before committing
+
+3. **Personalized Tutorial**
+   - Guided walkthrough of **only your selected inputs**
+   - Interactive demos you can try immediately
+   - Skip any step if you already understand it
+   - **"Skip Onboarding" button** for power users or quick access
+
+4. **Calibration for Precision**
+   - Voice: Accent and speech pattern training
+   - Eye Gaze: 9-point calibration for accurate tracking
+   - Head Motion: Sensitivity adjustment based on range of motion
+   - Custom sensitivity sliders for every input method
+
+5. **Quick Start Option**
+   - One-click "Guest" profile creation
+   - Bypass onboarding entirely if needed
+   - Jump straight to the dashboard with default settings
+   - Perfect for emergency situations or first-time exploration
+
+### Design Principles
+
+#### 1. **Visual Accessibility**
+
+**Neobrutalist Design Language**
+- **Bold borders (3-4px)**: High-contrast edges make UI elements unmistakable
+- **Thick shadows**: Depth perception without relying on subtle gradients
+- **Zero rounded corners** (except buttons): Sharp, clear boundaries
+- **Large touch targets**: Minimum 44×44px for all interactive elements
+- **High color contrast**: WCAG AAA compliant in all themes
+
+**Customizable Themes**
+- **Light Mode**: Yellow/black neobrutalist (default)
+- **Dark Mode**: Deep backgrounds for light sensitivity
+- **High Contrast**: Pure black/white for maximum visibility
+- **Colorblind Safe**: Blue/orange palette (no red/green)
+- **Calm Mode**: Soft pastels for sensory sensitivities
+
+**Typography Options**
+- **OpenDyslexic font**: Specifically designed for dyslexia
+- **Adjustable font size**: 12px - 32px in 2px increments
+- **Letter spacing control**: 0px - 4px for reading comfort
+- **Line height adjustment**: 1.2x - 2.0x for visual clarity
+
+**Cursor Enhancements**
+- **Large cursor option**: 2x size for visibility
+- **Custom cursor colors**: Match your theme preferences
+- **Focus indicators**: 3px outlines on all keyboard-navigable elements
+
+#### 2. **Motor Accessibility**
+
+**Tremor Filtering**
+- Stabilization algorithms for hand tremors
+- Smoothing for eye gaze jitter
+- Debouncing for accidental taps
+- Configurable dead zones
+
+**Flexible Input Timing**
+- Adjustable dwell times (400ms - 3000ms)
+- Customizable tap thresholds (short vs. long)
+- Pattern timeout controls
+- Scanning speed adjustment (500ms - 3000ms intervals)
+
+**Error Forgiveness**
+- Undo/redo in output panel
+- Easy gesture reset buttons
+- Clear canvas/restart options
+- Non-destructive actions
+
+#### 3. **Cognitive Accessibility**
+
+**Reduce Motion Option**
+- Disables all animations when enabled
+- Instant transitions instead of fades
+- System-level reduced motion support
+- Per-page animation controls
+
+**Clear Information Hierarchy**
+- Single-column layouts (no complex grids in docked mode)
+- Progressive disclosure (help tooltips on demand)
+- Consistent navigation patterns
+- Visual status indicators (recording, processing, connected)
+
+**Language Support**
+- Voice input in 5+ languages (English, Spanish, Chinese, Malay, Tamil)
+- Auto-detect language option
+- Sign language support (ASL, BSL, custom)
+- Simple, jargon-free interface text
+
+#### 4. **Auditory Accessibility**
+
+**Text-to-Speech Output**
+- Built-in speech synthesis for all output
+- Adjustable voice speed (0.5x - 2.0x)
+- Customizable voice pitch
+- Read-aloud on demand
+
+**Visual Alternatives**
+- All audio feedback has visual equivalents
+- Waveform displays for microphone input
+- Visual scanning indicators
+- Status lights for recording states
+
+#### 5. **Emergency & Safety Features**
+
+**SOS Button**
+- Always accessible in sidebar (bottom position)
+- Global keyboard shortcut: **Ctrl/Cmd + Shift + S**
+- Confirmation dialog prevents accidents
+- Visual + haptic feedback when triggered
+- Compact circular design in collapsed sidebar
+
+**Predictable Behavior**
+- No auto-play features
+- Explicit start/stop controls
+- Clear visual state indicators
+- Confirmation for destructive actions
+
+### Docked Mode for Assistive Use
+
+**Always-On-Top Widget**
+- 400×400px floating window
+- Bottom-right corner positioning
+- Stay focused while using other apps
+- Drag to undock and restore full size
+- Perfect for quick commands during work
+
+**Collapsed Sidebar**
+- Circular icon-only buttons
+- Tooltips on hover for identification
+- Perfect circles (no oval distortion)
+- Center-aligned icons
+- Accessible via Tab navigation
+
+### Adaptive Learning Engine
+
+Fluent learns from your usage patterns to improve over time:
+
+- **Frequent phrases**: Quick access to commonly used commands
+- **Input success rates**: Track which methods work best for you
+- **Personalized suggestions**: "Try eye gaze—98% accuracy this week!"
+- **Trend analysis**: "Voice input improving—great progress!"
+- **Privacy-preserved**: All learning happens locally, no cloud sync
+
+### Screen Reader Support
+
+**Full ARIA Implementation**
+- Semantic HTML5 structure
+- `role` attributes on all interactive elements
+- `aria-label` for icon-only buttons
+- `aria-current` for navigation state
+- `aria-live` regions for dynamic content
+- Keyboard navigation with visible focus indicators
+
+**Landmark Regions**
+- Clear navigation structure
+- Distinct main/aside/header sections
+- Skip-to-content links
+- Logical tab order
+
+---
 
 ## Architecture
 
@@ -54,7 +261,7 @@ Fluent enables people with disabilities to interact with their computers using t
 ┌────────────────────────▼─────────────────────────────────────┐
 │                  Desktop Agent (agent.py)                     │
 │              Vision-based System Automation                   │
-│                   (Gemini 2.5 Flash)                          │
+│                   (GPT-4o-mini/Gemini-2.5-flash)                          │
 └───────────────────────────────────────────────────────────────┘
 ```
 
@@ -129,7 +336,7 @@ You'll need a **Google Gemini API Key** for AI-powered features:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/ntu-beyond-binary.git
+git clone https://github.com/jasonmatthewsuhari/ntu-beyond-binary.git
 cd ntu-beyond-binary
 
 # 2. Install dependencies
@@ -155,7 +362,7 @@ chmod +x run.sh
 #### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/ntu-beyond-binary.git
+git clone https://github.com/jasonmatthewsuhari/ntu-beyond-binary.git
 cd ntu-beyond-binary
 ```
 
@@ -1287,7 +1494,7 @@ We welcome contributions! Here's how to get involved:
 
 1. **Fork the repository**
    ```bash
-   git clone https://github.com/yourusername/ntu-beyond-binary.git
+   git clone https://github.com/jasonmatthewsuhari/ntu-beyond-binary.git
    ```
 
 2. **Create a feature branch**
@@ -1380,8 +1587,8 @@ When possible, test your changes with people who have disabilities. Consider:
 ### Get Help
 
 - **Documentation**: See above for all available guides
-- **GitHub Issues**: [Report bugs or ask questions](https://github.com/yourusername/ntu-beyond-binary/issues)
-- **Discussions**: [Community forum](https://github.com/yourusername/ntu-beyond-binary/discussions)
+- **GitHub Issues**: [Report bugs or ask questions](https://github.com/jasonmatthewsuhari/ntu-beyond-binary/issues)
+- **Discussions**: [Community forum](https://github.com/jasonmatthewsuhari/ntu-beyond-binary/discussions)
 - **Email**: support@fluent-accessibility.com (if available)
 
 ### Commercial Support
@@ -1425,8 +1632,34 @@ You must:
 ### Inspiration
 This project is inspired by and built for people with disabilities who deserve equal access to technology. Thank you to the accessibility community for your feedback and guidance.
 
-### Contributors
-Thank you to all the contributors who make this project possible! See [CONTRIBUTORS.md](CONTRIBUTORS.md) for the full list.
+## Team Members
+<table width="100%">
+  <tr>
+    <th style="width: auto; white-space: nowrap;">Name</th>
+    <th style="width: auto; white-space: nowrap;">Role</th>
+    <th style="width: 100%;">GitHub</th>
+  </tr>
+  <tr>
+    <td style="white-space: nowrap;">Jason Matthew Suhari</td>
+    <td style="white-space: nowrap;">Frontend, Backend, Data</td>
+    <td><a href="https://github.com/jasonmatthewsuhari">@jasonmatthewsuhari</a></td>
+  </tr>
+  <tr>
+    <td style="white-space: nowrap;">Cheryll Fidelia Soedjono</td>
+    <td style="white-space: nowrap;">Frontend</td>
+    <td><a href="https://github.com/cheryllfid-s">@cheryllfid-s</a></td>
+  </tr>
+  <tr>
+    <td style="white-space: nowrap;">Meline Notowibowo-Lomsche</td>
+    <td style="white-space: nowrap;">Frontend</td>
+    <td><a href="https://github.com/melinenl">@melinenl</a></td>
+  </tr>
+  <tr>
+    <td style="white-space: nowrap;">Ryu Gahin</td>
+    <td style="white-space: nowrap;">Frontend, </td>
+    <td><a href="https://github.com/">NA</a></td>
+  </tr>
+</table>
 
 ---
 

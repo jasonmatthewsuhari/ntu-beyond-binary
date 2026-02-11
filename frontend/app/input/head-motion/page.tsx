@@ -3,11 +3,12 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useFluentContext } from '@/lib/fluent-context'
 import { recordInput } from '@/lib/adaptive-engine'
+import { useWebSocket } from '@/lib/use-websocket'
 import { ModePageLayout } from '@/components/mode-page-layout'
 import { WebcamPreview } from '@/components/webcam-preview'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Move, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Settings2 } from 'lucide-react'
+import { Move, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Settings2, Send } from 'lucide-react'
 
 interface MotionMapping {
     motion: string
@@ -29,6 +30,13 @@ export default function HeadMotionPage() {
     const [mappings, setMappings] = useState(DEFAULT_MAPPINGS)
     const [sensitivity, setSensitivity] = useState(50)
     const [detectedPose, setDetectedPose] = useState({ pitch: 0, yaw: 0, roll: 0 })
+
+    const { isConnected, executeQuery } = useWebSocket({
+        inputMethod: 'head',
+        onExecutionResult: (result) => {
+            console.log('Head motion query executed:', result)
+        }
+    })
 
     // Mock head motion detection using mouse position
     useEffect(() => {
@@ -65,6 +73,7 @@ export default function HeadMotionPage() {
         if (mapping) {
             appendOutput(mapping.action + ' ')
             recordInput('head-motion', true, 500, mapping.action)
+            executeQuery(mapping.action) // Execute via desktop agent
             if (navigator.vibrate) navigator.vibrate(50)
         }
     }
@@ -76,7 +85,6 @@ export default function HeadMotionPage() {
     return (
         <ModePageLayout
             title="Head Motion"
-            description="Nod, shake, and tilt your head to input commands. Fully customizable mappings."
             icon={<Move className="h-6 w-6 text-white" />}
             color="bg-amber-500"
             helpContent="Start tracking, then move your head. Nod up/down and tilt left/right trigger mapped actions. In this demo, mouse position simulates head pose."

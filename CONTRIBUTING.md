@@ -13,7 +13,7 @@ Thank you for your interest in making technology more accessible! We welcome con
 
 ### 🐛 Report Bugs
 
-1. Check [existing issues](https://github.com/yourusername/ntu-beyond-binary/issues) first
+1. Check [existing issues](https://github.com/jasonmatthewsuhari/ntu-beyond-binary/issues) first
 2. Create a new issue with:
    - Clear title describing the problem
    - Steps to reproduce
@@ -23,7 +23,7 @@ Thank you for your interest in making technology more accessible! We welcome con
 
 ### 💡 Suggest Features
 
-1. Check [existing discussions](https://github.com/yourusername/ntu-beyond-binary/discussions)
+1. Check [existing discussions](https://github.com/jasonmatthewsuhari/ntu-beyond-binary/discussions)
 2. Create a new discussion describing:
    - The accessibility problem you're solving
    - Your proposed solution
@@ -301,9 +301,9 @@ Observe:
 
 ## Getting Help
 
-- **Questions?** Open a [Discussion](https://github.com/yourusername/ntu-beyond-binary/discussions)
+- **Questions?** Open a [Discussion](https://github.com/jasonmatthewsuhari/ntu-beyond-binary/discussions)
 - **Stuck?** Ask in your Pull Request
-- **Found a bug?** Open an [Issue](https://github.com/yourusername/ntu-beyond-binary/issues)
+- **Found a bug?** Open an [Issue](https://github.com/jasonmatthewsuhari/ntu-beyond-binary/issues)
 
 ## Recognition
 
