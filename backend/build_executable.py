@@ -3,9 +3,18 @@ Build a standalone executable for the backend server using PyInstaller.
 This creates a single executable that includes Python and all dependencies.
 """
 
-import PyInstaller.__main__
 import sys
 import os
+import subprocess
+
+# Check if PyInstaller is installed, install if not
+try:
+    import PyInstaller.__main__
+except ImportError:
+    print("PyInstaller not found. Installing...")
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'pyinstaller==6.3.0'])
+    import PyInstaller.__main__
+    print("PyInstaller installed successfully!\n")
 
 def build_server():
     """Build the backend server as a standalone executable."""

@@ -6,9 +6,20 @@ echo   Fluent Complete Build Script
 echo ========================================
 echo.
 
-echo [1/5] Building Backend Executable...
+echo [1/6] Checking Backend Dependencies...
 echo.
 cd backend
+echo Installing Python dependencies (including PyInstaller)...
+pip install -r requirements.txt
+if errorlevel 1 (
+    echo [ERROR] Failed to install backend dependencies!
+    pause
+    exit /b 1
+)
+echo.
+
+echo [2/6] Building Backend Executable...
+echo.
 python build_executable.py
 if errorlevel 1 (
     echo [ERROR] Backend build failed!
@@ -18,7 +29,7 @@ if errorlevel 1 (
 cd ..
 echo.
 
-echo [2/5] Installing Frontend Dependencies...
+echo [3/6] Installing Frontend Dependencies...
 echo.
 cd frontend
 call npm install
@@ -29,7 +40,7 @@ if errorlevel 1 (
 )
 echo.
 
-echo [3/5] Building Next.js Production Bundle...
+echo [4/6] Building Next.js Production Bundle...
 echo.
 call npm run build
 if errorlevel 1 (
@@ -39,7 +50,7 @@ if errorlevel 1 (
 )
 echo.
 
-echo [4/5] Packaging Electron Application...
+echo [5/6] Packaging Electron Application...
 echo.
 call npm run electron-build
 if errorlevel 1 (
@@ -50,7 +61,7 @@ if errorlevel 1 (
 cd ..
 echo.
 
-echo [5/5] Build Complete!
+echo [6/6] Build Complete!
 echo.
 echo ========================================
 echo   Fluent has been built successfully!
