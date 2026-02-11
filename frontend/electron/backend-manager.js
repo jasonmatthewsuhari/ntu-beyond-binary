@@ -12,6 +12,51 @@ let pythonServer = null
 let serverReady = false
 
 /**
+ * Find Python executable on the system
+ */
+function findPythonExecutable() {
+    const { execSync } = require('child_process')
+    
+    // Try different Python commands
+    const pythonCommands = ['python', 'python3', 'py']
+    
+    for (const cmd of pythonCommands) {
+        try {
+            // Check if command exists and is Python 3
+            const version = execSync(`${cmd} --version`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] })
+            if (version.includes('Python 3')) {
+                console.log(`Found Python: ${cmd} (${version.trim()})`)
+                return cmd
+            }
+        } catch (error) {
+            // Command not found, try next one
+            continue
+        }
+    }
+    
+    // If not found in PATH, try common Windows locations
+    if (process.platform === 'win32') {
+        const commonPaths = [
+            'C:\\Python311\\python.exe',
+            'C:\\Python310\\python.exe',
+            'C:\\Python39\\python.exe',
+            path.join(process.env.LOCALAPPDATA || '', 'Programs\\Python\\Python311\\python.exe'),
+            path.join(process.env.LOCALAPPDATA || '', 'Programs\\Python\\Python310\\python.exe'),
+            path.join(process.env.LOCALAPPDATA || '', 'Programs\\Python\\Python39\\python.exe'),
+        ]
+        
+        for (const pythonPath of commonPaths) {
+            if (fs.existsSync(pythonPath)) {
+                console.log(`Found Python at: ${pythonPath}`)
+                return pythonPath
+            }
+        }
+    }
+    
+    return null
+}
+
+/**
  * Get the path to the bundled backend executable
  */
 function getBackendPath() {
@@ -19,9 +64,18 @@ function getBackendPath() {
     
     if (isDev) {
         // Development: use Python directly
+        const pythonExe = findPythonExecutable()
+        
+        if (!pythonExe) {
+            throw new Error(
+                'Python 3 not found! Please install Python 3.9-3.11 from https://www.python.org/\n\n' +
+                'Make sure to check "Add Python to PATH" during installation.'
+            )
+        }
+        
         return {
             type: 'python',
-            executable: process.platform === 'win32' ? 'python' : 'python3',
+            executable: pythonExe,
             script: path.join(__dirname, '../../backend/src/server.py'),
             cwd: path.join(__dirname, '../../backend/src')
         }
@@ -76,18 +130,35 @@ function ensureEnvFile() {
  */
 function startBackendServer() {
     return new Promise((resolve, reject) => {
-        const backend = getBackendPath()
-        ensureEnvFile()
+        let backend
         
-        console.log('Starting backend server...')
-        console.log('Backend type:', backend.type)
-        console.log('Backend path:', backend.executable)
-        
-        // Check if executable exists
-        if (!fs.existsSync(backend.executable)) {
-            const error = `Backend executable not found: ${backend.executable}`
-            console.error(error)
-            reject(new Error(error))
+        try {
+            backend = getBackendPath()
+            ensureEnvFile()
+            
+            console.log('Starting backend server...')
+            console.log('Backend type:', backend.type)
+            console.log('Backend path:', backend.executable)
+            
+            // For development mode with Python, check if script exists (not the python executable)
+            if (backend.type === 'python') {
+                if (!fs.existsSync(backend.script)) {
+                    const error = `Backend script not found: ${backend.script}`
+                    console.error(error)
+                    reject(new Error(error))
+                    return
+                }
+            } else {
+                // For production, check if executable exists
+                if (!fs.existsSync(backend.executable)) {
+                    const error = `Backend executable not found: ${backend.executable}`
+                    console.error(error)
+                    reject(new Error(error))
+                    return
+                }
+            }
+        } catch (error) {
+            reject(error)
             return
         }
         
