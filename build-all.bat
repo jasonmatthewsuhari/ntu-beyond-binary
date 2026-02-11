@@ -10,11 +10,27 @@ echo [1/6] Checking Backend Dependencies...
 echo.
 cd backend
 echo Installing Python dependencies (including PyInstaller)...
-pip install -r requirements.txt
+echo NOTE: If you get permission errors, close all Python/Electron apps and try again
+echo.
+pip install -r requirements.txt --user
 if errorlevel 1 (
-    echo [ERROR] Failed to install backend dependencies!
-    pause
-    exit /b 1
+    echo.
+    echo [WARNING] Failed to install some dependencies with --user flag
+    echo Trying without --user flag (may require admin)...
+    echo.
+    pip install -r requirements.txt
+    if errorlevel 1 (
+        echo.
+        echo [ERROR] Failed to install backend dependencies!
+        echo.
+        echo Possible fixes:
+        echo   1. Close any running Fluent/Python applications
+        echo   2. Run this script as Administrator
+        echo   3. Manually install: pip install -r backend\requirements.txt --user
+        echo.
+        pause
+        exit /b 1
+    )
 )
 echo.
 
