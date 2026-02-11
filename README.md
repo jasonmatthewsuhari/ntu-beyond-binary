@@ -1,6 +1,6 @@
 # Fluent - Universal Accessibility Input System
 
-![Project Screenshot](readme_images/sitting_bottom_corner.jpg)
+![Project Screenshot](readme_images/1.png)
 
 A privacy-first, Electron-based accessibility application that translates various input methods (voice, gestures, eye gaze, etc.) into natural language queries executed via an AI-powered desktop agent. It's cool to be accessible!
 
@@ -222,6 +222,14 @@ Fluent learns from your usage patterns to improve over time:
 - Distinct main/aside/header sections
 - Skip-to-content links
 - Logical tab order
+
+---
+
+## Screenshots
+
+![Main View](readme_images/main.jpg)
+![Docked](readme_images/sitting_bottom_corner.png)
+![Settings](readme_images/settings.jpg)
 
 ---
 
@@ -1570,17 +1578,17 @@ When possible, test your changes with people who have disabilities. Consider:
 - **[README.md](README.md)** - Main documentation (you are here)
 - **[QUICK_START.md](QUICK_START.md)** - 5-minute setup guide
 - **[BUILD_INSTRUCTIONS.md](BUILD_INSTRUCTIONS.md)** - How to build standalone executables
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute to the project
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute
 - **[backend/README.md](backend/README.md)** - Backend API documentation
-- **[backend/env.example](backend/env.example)** - Environment variable template
 
-### Helpful Scripts
+### Setup Scripts
 
-| Script | Purpose | Platform |
-|--------|---------|----------|
-| `setup.bat` / `setup.sh` | Initial setup (run once) | All |
-| `quick-start.bat` / `quick-start.sh` | Start backend server | All |
-| `start-frontend.bat` / `start-frontend.sh` | Start Electron app | All |
+| Script | Purpose |
+|--------|---------|
+| `setup.bat` / `setup.sh` | One-time setup (installs dependencies) |
+| `quick-start.bat` / `quick-start.sh` | Start backend server |
+| `start-frontend.bat` / `start-frontend.sh` | Start Electron app |
+| `build-all.bat` / `build-all.sh` | Build standalone executable |
 
 ## Support
 
